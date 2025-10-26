@@ -458,26 +458,36 @@ body.rise-enabled.theme-moon div.jp-MarkdownCell.jp-mod-rendered {
   color: #eee8d5;
 }
 
-/*Make images responsive and stack vertically*/
-.rise-enabled .jp-RenderedHTMLCommon img,
-.rise-enabled .reveal section img {
+/* css */
+/* Append this at the end of `rise/packages/application/style/base.css` */
+
+/* Allow slides and sections to grow vertically and not be clipped */
+.rise-enabled .reveal .slides,
+.rise-enabled .reveal section {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  align-items: flex-start !important; /* stop vertical centering that clips content */
+  box-sizing: border-box !important;
+}
+
+/* Ensure individual sections behave like normal block flow */
+.rise-enabled .reveal .slides > section,
+.rise-enabled .reveal section {
+  display: block !important;
+}
+
+/* Images should not be constrained by max-height */
+.rise-enabled .reveal section img,
+.rise-enabled .jp-RenderedHTMLCommon img {
   display: block;
   max-width: 100%;
-  height: auto;
+  height: auto !important;
+  max-height: none !important;
   margin: 0.5em 0;
 }
 
-/*Allow rendered markdown to grow vertically (override hidden overflow)*/
-.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
-  overflow-x: hidden;
-  overflow-y: visible !important;
-}
-
-/*Prevent notebook panel and reveal sections from clipping content*/
+/* Reinforce notebook panel visibility if an earlier rule set it to hidden */
 .rise-enabled .jp-NotebookPanel {
-  overflow: visible !important;
-}
-/*ttt*/
-.rise-enabled .reveal section {
   overflow: visible !important;
 }
