@@ -458,9 +458,6 @@ body.rise-enabled.theme-moon div.jp-MarkdownCell.jp-mod-rendered {
   color: #eee8d5;
 }
 
-/* css */
-/* Append this at the end of `rise/packages/application/style/base.css` */
-
 /* Allow slides and sections to grow vertically and not be clipped */
 .rise-enabled .reveal .slides,
 .rise-enabled .reveal section {
