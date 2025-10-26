@@ -499,3 +499,22 @@ body.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
   align-items: flex-start !important;
   box-sizing: border-box !important;
 }
+
+<!-- html -->
+<div style="display:block;box-sizing:border-box;">
+  <img src="uni-tuebingen-1.png" style="display:block;width:auto;max-width:100%;height:auto;max-height:none !important;margin-bottom:0.5em;">
+  <img src="uni-tuebingen-2.png" style="display:block;width:auto;max-width:100%;height:auto;max-height:none !important;">
+</div>
+
+<!-- Optional: add this CSS to `rise/packages/application/style/base.css` for a global fix -->
+<style>
+/* paste into the end of `rise/packages/application/style/base.css` */
+.rise-enabled .reveal section img,
+.rise-enabled .jp-RenderedHTMLCommon img {
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+}
+</style>
