@@ -488,3 +488,14 @@ body.rise-enabled.theme-moon div.jp-MarkdownCell.jp-mod-rendered {
 .rise-enabled .jp-NotebookPanel {
   overflow: visible !important;
 }
+body.rise-enabled .reveal .slides,
+body.rise-enabled .reveal .slides > section,
+body.rise-enabled .reveal section,
+body.rise-enabled .jp-NotebookPanel,
+body.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  align-items: flex-start !important;
+  box-sizing: border-box !important;
+}
