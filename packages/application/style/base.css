@@ -457,3 +457,27 @@ body.rise-enabled.theme-moon div.jp-RenderedHTMLCommon,
 body.rise-enabled.theme-moon div.jp-MarkdownCell.jp-mod-rendered {
   color: #eee8d5;
 }
+
+/*Make images responsive and stack vertically*/
+.rise-enabled .jp-RenderedHTMLCommon img,
+.rise-enabled .reveal section img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.5em 0;
+}
+
+/*Allow rendered markdown to grow vertically (override hidden overflow)*/
+.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
+  overflow-x: hidden;
+  overflow-y: visible !important;
+}
+
+/*Prevent notebook panel and reveal sections from clipping content*/
+.rise-enabled .jp-NotebookPanel {
+  overflow: visible !important;
+}
+
+.rise-enabled .reveal section {
+  overflow: visible !important;
+}
