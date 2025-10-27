@@ -499,3 +499,20 @@ body.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
   align-items: flex-start !important;
   box-sizing: border-box !important;
 }
+
+/* Fullscreen-only: let the current slide scroll instead of clipping */
+:fullscreen .reveal .slides > section.present,
+:-webkit-full-screen .reveal .slides > section.present {
+  height: 100% !important;            /* fill viewport */
+  overflow-y: auto !important;         /* vertical scrollbar when needed */
+  align-items: flex-start !important;  /* no vertical centering */
+  justify-content: flex-start !important;
+}
+
+/* Ensure images keep natural height in fullscreen */
+:fullscreen .reveal section img,
+:-webkit-full-screen .reveal section img {
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+}
