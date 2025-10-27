@@ -267,10 +267,10 @@ namespace Rise {
     controls: true,
     progress: true,
     history: true,
-    scroll: false,
+    scroll: true,
     center: true,
     margin: 0.1,
-    minScale: 1.0,
+    minScale: 0.5,
 
     // turn off reveal's help overlay that is by default bound to question mark / ?
     help: false,
