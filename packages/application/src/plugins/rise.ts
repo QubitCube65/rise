@@ -891,8 +891,22 @@ namespace Rise {
     }
 
     // Get the parent origin for secure postMessage
-    const parentOrigin =
-      window.location.ancestorOrigins?.[0] ?? window.location.origin;
+    // Try multiple methods to get parent origin for cross-browser compatibility
+    let parentOrigin = window.location.origin;
+    try {
+      // ancestorOrigins is Chrome/Webkit only
+      if (window.location.ancestorOrigins?.length) {
+        parentOrigin = window.location.ancestorOrigins[0];
+      } else if (document.referrer) {
+        // Fallback to document.referrer for Firefox and other browsers
+        parentOrigin = new URL(document.referrer).origin;
+      }
+    } catch (err) {
+      console.warn(
+        'Could not determine parent origin, using same origin:',
+        err
+      );
+    }
 
     // Map of keys that should be forwarded to parent for command execution
     const forwardedKeys = new Set([
@@ -1177,6 +1191,10 @@ namespace Rise {
     setupOutputObserver();
 
     // Forward keyboard events to parent window when in fullscreen iframe mode
+    // Note: The cleanup function is not stored because the RISE application runs
+    // in an iframe that is destroyed when the slideshow closes, which automatically
+    // removes all event listeners. If manual cleanup is needed in the future,
+    // store the cleanup function and call it in an appropriate disposal hook.
     setupKeyboardForwarding(commands);
 
     // Setup the starting slide
