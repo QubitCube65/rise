@@ -718,8 +718,8 @@ namespace Rise {
       auto_select === 'code'
         ? 'code'
         : auto_select === 'first'
-        ? null
-        : undefined;
+          ? null
+          : undefined;
 
     /* turned off altogether */
     if (cell_type === undefined) {
@@ -879,7 +879,7 @@ namespace Rise {
    * Setup keyboard event forwarding to parent window when in iframe.
    * This fixes the issue where keyboard shortcuts don't work in fullscreen mode
    * because events are isolated within the iframe.
-   * 
+   *
    * @returns Cleanup function to remove event listeners
    */
   function setupKeyboardForwarding(commands: CommandRegistry): () => void {
@@ -891,7 +891,8 @@ namespace Rise {
     }
 
     // Get the parent origin for secure postMessage
-    const parentOrigin = window.location.ancestorOrigins?.[0] ?? window.location.origin;
+    const parentOrigin =
+      window.location.ancestorOrigins?.[0] ?? window.location.origin;
 
     // Map of keys that should be forwarded to parent for command execution
     const forwardedKeys = new Set([

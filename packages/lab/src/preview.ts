@@ -139,17 +139,17 @@ export class RisePreview extends DocumentWidget<IFrame, INotebookModel> {
         const keyCommandMap: { [key: string]: string } = {
           ',': 'RISE:toggleAllRiseButtons',
           '?': 'RISE:riseHelp',
-          'Home': 'RISE:firstSlide',
-          'End': 'RISE:lastSlide',
-          'w': 'RISE:toggleOverview',
-          'W': 'RISE:toggleOverview'
+          Home: 'RISE:firstSlide',
+          End: 'RISE:lastSlide',
+          w: 'RISE:toggleOverview',
+          W: 'RISE:toggleOverview'
         };
 
         const commandId = keyCommandMap[key];
         if (commandId) {
           // Get the iframe's origin for secure postMessage
           const iframeOrigin = new URL(this.content.url).origin;
-          
+
           // Execute the command in the iframe context
           iframe.contentWindow?.postMessage(
             {
