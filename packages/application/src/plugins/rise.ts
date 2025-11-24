@@ -875,11 +875,78 @@ namespace Rise {
     }
   }
 
+  /**
+   * Setup keyboard event forwarding to parent window when in iframe.
+   * This fixes the issue where keyboard shortcuts don't work in fullscreen mode
+   * because events are isolated within the iframe.
+   */
+  function setupKeyboardForwarding(commands: CommandRegistry): void {
+    // Only forward events if we're in an iframe
+    if (window.self === window.top) {
+      return;
+    }
+
+    // Map of keys that should be forwarded to parent for command execution
+    const forwardedKeys = new Set([
+      ',', // Toggle buttons
+      '?', // Help
+      'Home', // First slide
+      'End', // Last slide
+      'w', // Toggle overview
+      'W' // Toggle overview
+    ]);
+
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      // Don't forward if user is typing in an input field
+      const target = event.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      // Check if this key should be forwarded
+      if (forwardedKeys.has(event.key)) {
+        // Forward the event to the parent window
+        try {
+          window.parent.postMessage(
+            {
+              type: 'rise:keyboard',
+              key: event.key,
+              shiftKey: event.shiftKey,
+              ctrlKey: event.ctrlKey,
+              altKey: event.altKey,
+              metaKey: event.metaKey
+            },
+            '*'
+          );
+        } catch (err) {
+          console.error('Error forwarding keyboard event to parent:', err);
+        }
+      }
+    });
+
+    // Listen for command execution requests from parent
+    window.addEventListener('message', (event: MessageEvent) => {
+      if (event.data?.type === 'rise:execute-command') {
+        const commandId = event.data.commandId;
+        if (commandId && commands.hasCommand(commandId)) {
+          commands.execute(commandId).catch((err: any) => {
+            console.error(`Error executing command ${commandId}:`, err);
+          });
+        }
+      }
+    });
+  }
+
   let isRevealInitialized = false;
 
   async function Revealer(
     panel: NotebookPanel,
-    selected_slide: [number, number]
+    selected_slide: [number, number],
+    commands: CommandRegistry
   ): Promise<void> {
     document.body.classList.add('rise-enabled');
 
@@ -1087,6 +1154,9 @@ namespace Rise {
     // Sync when an output is generated.
     setupOutputObserver();
 
+    // Forward keyboard events to parent window when in fullscreen iframe mode
+    setupKeyboardForwarding(commands);
+
     // Setup the starting slide
     setStartingSlide(selected_slide);
     addHeaderFooterOverlay();
@@ -1124,7 +1194,7 @@ namespace Rise {
     // Preparing the new reveal-compatible structure
     const selected_slide = markupSlides(notebook);
     // Adding the reveal stuff
-    Revealer(panel, selected_slide);
+    Revealer(panel, selected_slide, commands);
     // Minor modifications for usability
     addHelpButton(panel, commands, trans);
   }

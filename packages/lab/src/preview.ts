@@ -114,6 +114,52 @@ export class RisePreview extends DocumentWidget<IFrame, INotebookModel> {
     this.toolbar.addItem('spacer', Toolbar.createSpacerItem());
 
     this.toolbar.addItem('reload', reloadButton);
+
+    // Setup keyboard event forwarding from iframe
+    this._setupKeyboardForwarding(options.commands);
+  }
+
+  /**
+   * Setup listener for keyboard events forwarded from iframe.
+   * This allows keyboard shortcuts to work even when the slideshow is in fullscreen mode.
+   */
+  private _setupKeyboardForwarding(commands: CommandRegistry): void {
+    this._keyboardHandler = (event: MessageEvent) => {
+      // Verify the message is from our iframe
+      const iframe = this.iframe;
+      if (!iframe || event.source !== iframe.contentWindow) {
+        return;
+      }
+
+      // Check if this is a keyboard event
+      if (event.data?.type === 'rise:keyboard') {
+        const { key } = event.data;
+
+        // Map keys to command IDs
+        const keyCommandMap: { [key: string]: string } = {
+          ',': 'RISE:toggleAllRiseButtons',
+          '?': 'RISE:riseHelp',
+          'Home': 'RISE:firstSlide',
+          'End': 'RISE:lastSlide',
+          'w': 'RISE:toggleOverview',
+          'W': 'RISE:toggleOverview'
+        };
+
+        const commandId = keyCommandMap[key];
+        if (commandId) {
+          // Execute the command in the iframe context
+          iframe.contentWindow?.postMessage(
+            {
+              type: 'rise:execute-command',
+              commandId: commandId
+            },
+            '*'
+          );
+        }
+      }
+    };
+
+    window.addEventListener('message', this._keyboardHandler);
   }
 
   /**
@@ -133,6 +179,9 @@ export class RisePreview extends DocumentWidget<IFrame, INotebookModel> {
   dispose(): void {
     if (this.isDisposed) {
       return;
+    }
+    if (this._keyboardHandler) {
+      window.removeEventListener('message', this._keyboardHandler);
     }
     super.dispose();
     Signal.clearData(this);
@@ -211,6 +260,7 @@ export class RisePreview extends DocumentWidget<IFrame, INotebookModel> {
   private _ready: PromiseDelegate<void>;
   private _renderOnSave: boolean;
   private _path: string;
+  private _keyboardHandler?: (event: MessageEvent) => void;
 }
 
 /**
