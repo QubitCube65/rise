@@ -892,6 +892,7 @@ namespace Rise {
 
     // Get the parent origin for secure postMessage
     // Try multiple methods to get parent origin for cross-browser compatibility
+    // Default to same origin since RISE iframe is served from same origin as JupyterLab
     let parentOrigin = window.location.origin;
     try {
       // ancestorOrigins is Chrome/Webkit only
@@ -901,6 +902,8 @@ namespace Rise {
         // Fallback to document.referrer for Firefox and other browsers
         parentOrigin = new URL(document.referrer).origin;
       }
+      // If neither method works, we use window.location.origin which is correct
+      // for RISE since the iframe is loaded from the same origin as JupyterLab
     } catch (err) {
       console.warn(
         'Could not determine parent origin, using same origin:',
