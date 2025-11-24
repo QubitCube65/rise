@@ -879,12 +879,19 @@ namespace Rise {
    * Setup keyboard event forwarding to parent window when in iframe.
    * This fixes the issue where keyboard shortcuts don't work in fullscreen mode
    * because events are isolated within the iframe.
+   * 
+   * @returns Cleanup function to remove event listeners
    */
-  function setupKeyboardForwarding(commands: CommandRegistry): void {
+  function setupKeyboardForwarding(commands: CommandRegistry): () => void {
     // Only forward events if we're in an iframe
     if (window.self === window.top) {
-      return;
+      return () => {
+        // No-op cleanup for non-iframe case
+      };
     }
+
+    // Get the parent origin for secure postMessage
+    const parentOrigin = window.location.ancestorOrigins?.[0] ?? window.location.origin;
 
     // Map of keys that should be forwarded to parent for command execution
     const forwardedKeys = new Set([
@@ -896,7 +903,7 @@ namespace Rise {
       'W' // Toggle overview
     ]);
 
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
+    const keydownHandler = (event: KeyboardEvent) => {
       // Don't forward if user is typing in an input field
       const target = event.target as HTMLElement;
       if (
@@ -920,16 +927,21 @@ namespace Rise {
               altKey: event.altKey,
               metaKey: event.metaKey
             },
-            '*'
+            parentOrigin
           );
         } catch (err) {
           console.error('Error forwarding keyboard event to parent:', err);
         }
       }
-    });
+    };
 
     // Listen for command execution requests from parent
-    window.addEventListener('message', (event: MessageEvent) => {
+    const messageHandler = (event: MessageEvent) => {
+      // Verify origin for security
+      if (event.origin !== parentOrigin) {
+        return;
+      }
+
       if (event.data?.type === 'rise:execute-command') {
         const commandId = event.data.commandId;
         if (commandId && commands.hasCommand(commandId)) {
@@ -938,7 +950,16 @@ namespace Rise {
           });
         }
       }
-    });
+    };
+
+    document.addEventListener('keydown', keydownHandler);
+    window.addEventListener('message', messageHandler);
+
+    // Return cleanup function
+    return () => {
+      document.removeEventListener('keydown', keydownHandler);
+      window.removeEventListener('message', messageHandler);
+    };
   }
 
   let isRevealInitialized = false;

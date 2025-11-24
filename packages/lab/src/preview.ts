@@ -147,13 +147,16 @@ export class RisePreview extends DocumentWidget<IFrame, INotebookModel> {
 
         const commandId = keyCommandMap[key];
         if (commandId) {
+          // Get the iframe's origin for secure postMessage
+          const iframeOrigin = new URL(this.content.url).origin;
+          
           // Execute the command in the iframe context
           iframe.contentWindow?.postMessage(
             {
               type: 'rise:execute-command',
               commandId: commandId
             },
-            '*'
+            iframeOrigin
           );
         }
       }
