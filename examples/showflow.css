@@ -1,3 +1,17 @@
-div.foo {
-  background-color: red;
+/**
+ * RISE Flow Visualization Example
+ *
+ * Purpose:
+ * - Simple flow visualization with red background
+ *
+ * Usage:
+ * 1. Place this file in: rise/examples/showflow.css
+ * 2. Add 'flow' class to cells you want to highlight
+ */
+
+/* Basic red background for flow elements */
+body.rise-enabled .flow {
+    background: red;
 }
+
+

@@ -1,13 +1,23 @@
-/*
- * this is loaded together with README.ipynb
- * because it's named the same with css extension
+/**
+ * RISE README Example Style
+ *
+ * Purpose:
+ * - Demonstrates automatic CSS loading for matching notebook names
+ * - Shows custom styling for code cells
+ * - Example of cell border radius customization
+ *
+ * Usage:
+ * 1. Place this file as rise/examples/README.css
+ * 2. RISE will automatically load it with README.ipynb
+ * Note: Files must share the same base name (README)
  */
 
-/* not very useful, but an OBVIOUS setting that you cannot miss */
+/* Custom border radius for code cells */
 div.cell.code_cell.rendered {
   border-radius: 0px 0px 30px 0px;
 }
 
+/* Matching border radius for input areas */
 div.input_area {
   border-radius: 0px 0px 25px 0px;
 }

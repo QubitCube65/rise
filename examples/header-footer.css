@@ -1,26 +1,50 @@
-/* this is for styling the overlay
- * when using header / footer and backimage
+/**
+ * RISE Header and Footer Customization Example
  *
- * see metadata in notebook
+ * Purpose:
+* - Demonstrates header/footer styling with optional scroll functionality
+ * - Shows proper positioning and styling of overlay elements
+ *
+ * Usage:
+ * 1. Place this file in: rise/examples/styles/header-footer.css
+ * 2. In your notebook metadata, enable headers/footers:
+ *    {
+ *      "rise": {
+ *        "header": "Your Header",
+ *        "footer": "Your Footer",
+ *        "backimage": "path/to/image.jpg"
+ *        "scroll": true  // Optional: enable scrolling
+ *      }
+ *    }
+ * Note: The body.rise-enabled class ensures styles only apply in presentation mode
  */
 
+/* Header positioning and styling */
 #rise-header {
   margin: 10px;
   left: 10%;
 }
 
+/* Footer positioning and styling */
 #rise-footer {
   margin: 10px;
   right: 10%;
 }
 
+/* Background image opacity control */
 #rise-backimage {
   opacity: 0.2;
 }
 
 /* TODO: maybe we need to port this to main.css?  */
+/* Control maximum image size in slides */
 .reveal img {
   max-width: 100%;
+}
+
+/* Add margin to prevent content overlap with header */
+section.stack.present {
+  margin-top: 50px;
 }
 
 /* leave some space for the header
@@ -29,6 +53,10 @@
    in this case it is better to style this selector
    rather than just 'section' because there are 2 depths of sections
 */
-section.stack.present {
-  margin-top: 50px;
+
+/* Optional: Configure scrollable content area when scroll is enabled */
+body.rise-enabled section.rise-scroll {
+    margin-top: 100px;
+    height: 85vh;
 }
+

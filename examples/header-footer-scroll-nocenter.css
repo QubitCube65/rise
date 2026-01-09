@@ -1,9 +1,26 @@
-/* this is for styling the overlay
- * when using header / footer and backimage
+/**
+ * RISE Header/Footer with Non-Centered Layout Example
  *
- * see metadata in notebook
+ * Purpose:
+ * - Demonstrates header/footer styling without center alignment
+ * - Provides fixed-width overlay elements with borders
+ * - Supports scrollable content with proper spacing
+ *
+ * Usage:
+ * 1. Place this file in: rise/examples/styles/header-footer-scroll-nocenter.css
+ * 2. Configure notebook metadata:
+ *    {
+ *      "rise": {
+ *        "scroll": true,
+ *        "header": "Your Header",
+ *        "footer": "Your Footer",
+ *        "backimage": "path/to/image.jpg"
+ *      }
+ *    }
+ * Note: The body.rise-enabled class ensures styles only apply in presentation mode
  */
 
+/* Header with blue border */
 #rise-header {
   margin: auto;
   padding: 30px 30px 5px 30px;
@@ -14,6 +31,7 @@
   left: 0;
 }
 
+/* Footer with orange border */
 #rise-footer {
   margin: auto;
   position: fixed;
@@ -24,22 +42,24 @@
   bottom: 0;
 }
 
+/* Background image opacity */
 #rise-backimage {
   opacity: 0.2;
 }
 
 /* TODO: maybe we need to port this to main.css?  */
+/* Maximum image size control */
 .reveal img {
   max-width: 100%;
 }
 
-/* to regulate the amount of space left to the scrolling area */
+/* Scrollable content area spacing */
 section.rise-scroll {
   margin-top: 100px; /* a bit more than should match the header size */
   height: 80vh; /* to leave some space below for the footer */
 }
 
-/* if activated, also adds header margin to slides with scrolling disabled */
+/* Optional top margin for non-scrolling slides */
 #notebook-container {
   #margin-top: 100px;
 }
