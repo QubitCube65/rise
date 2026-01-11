@@ -982,7 +982,8 @@ namespace Rise {
         buttons: [
           Dialog.cancelButton(),
           Dialog.okButton({ label: 'Apply' })
-        ]
+        ],
+        host: document.querySelector('.reveal') as HTMLElement
       });
 
       dialog.then(result => {
@@ -1152,18 +1153,18 @@ namespace Rise {
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
         188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
-        67: (event: KeyboardEvent) => { // Shift+C
+        67: (event: KeyboardEvent) => { // Shift+C for help menu
             if (event.shiftKey) {
               event.preventDefault();
               openFontSizeMenu();
             }
-          }//,
-          //191: (event: KeyboardEvent) => { // Shift+/ (= ?)
-            //if (event.shiftKey) {
-              //event.preventDefault();
-              //displayRiseHelp(commands, trans);
-            //}
-          //}
+          },
+        191: (event: KeyboardEvent) => { // Shift+/ (= ?)
+            if (event.shiftKey) {
+              event.preventDefault();
+              displayRiseHelp(commands, trans);
+            }
+        }
         },
         plugins: []
     };
@@ -1389,7 +1390,8 @@ document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
     await showDialog({
       title: trans.__('Reveal Shortcuts Help'),
       body: new Widget({ node }),
-      buttons: [Dialog.warnButton({ label: trans.__('OK') })]
+      buttons: [Dialog.warnButton({ label: trans.__('OK') })],
+      host: document.querySelector('.reveal') as HTMLElement //!!!
     });
   }
 
