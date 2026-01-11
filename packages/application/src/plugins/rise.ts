@@ -126,6 +126,20 @@ export const plugin: JupyterFrontEndPlugin<void> = {
         --jp-ui-table-font-size-rise: 20px !important;
         --jp-ui-code-output: 20px !important;
       }
+
+     #help-b {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    z-index: 9999 !important;
+    cursor: pointer !important;
+    color: #42affa !important;
+    opacity: 0.7 !important;
+  }
+
+  #help-b:hover {
+    opacity: 1 !important;
+  }
     `;
     document.head.appendChild(style);
 
@@ -1012,10 +1026,12 @@ namespace Rise {
   }
 
   let isRevealInitialized = false;
-
+//
   async function Revealer(
     panel: NotebookPanel,
-    selected_slide: [number, number]
+    selected_slide: [number, number],
+    commands: CommandRegistry,
+    trans: TranslationBundle
   ): Promise<void> {
     document.body.classList.add('rise-enabled');
 
@@ -1136,15 +1152,20 @@ namespace Rise {
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
         188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
-        67: (event: KeyboardEvent) => { //!!!
-          if (event.shiftKey) {
-            event.preventDefault();
-            openFontSizeMenu();
-          }
-        }
-      },
-
-      plugins: []
+        67: (event: KeyboardEvent) => { // Shift+C
+            if (event.shiftKey) {
+              event.preventDefault();
+              openFontSizeMenu();
+            }
+          }//,
+          //191: (event: KeyboardEvent) => { // Shift+/ (= ?)
+            //if (event.shiftKey) {
+              //event.preventDefault();
+              //displayRiseHelp(commands, trans);
+            //}
+          //}
+        },
+        plugins: []
     };
 
     // Import notes plugin
@@ -1226,6 +1247,13 @@ namespace Rise {
       autoSelectHook(panel.content);
     });
 
+document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
+  if (event.shiftKey && event.key === '?') {
+    event.preventDefault();
+    displayRiseHelp(commands, trans);
+  }
+});
+
     // Sync when an output is generated.
     setupOutputObserver();
 
@@ -1266,7 +1294,7 @@ namespace Rise {
     // Preparing the new reveal-compatible structure
     const selected_slide = markupSlides(notebook);
     // Adding the reveal stuff
-    Revealer(panel, selected_slide);
+    Revealer(panel, selected_slide, commands, trans);
     // Minor modifications for usability
     addHelpButton(panel, commands, trans);
   }
@@ -1299,6 +1327,9 @@ namespace Rise {
     ${helpListItem(CommandIDs.riseHelp)}
     <li><kbd>${CommandRegistry.formatKeystroke('Alt R')}</kbd>: ${trans.__(
       'enter/exit RISE'
+    )}</li>
+    <li><kbd>${CommandRegistry.formatKeystroke('Shift C')}</kbd>: ${trans.__(
+    'change font size'
     )}</li>
     <li><kbd>${CommandRegistry.formatKeystroke('Space')}</kbd>: ${trans.__(
       'next'
