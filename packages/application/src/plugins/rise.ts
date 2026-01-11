@@ -1005,9 +1005,9 @@ namespace Rise {
         contentWidget.dispose();
       });
   }
-
+//'#help-b', ...
   function toggleAllRiseButtons() {
-    for (const selector of ['#help-b', '#toggle-chalkboard', '#toggle-notes']) {
+    for (const selector of ['#toggle-chalkboard', '#toggle-notes']) {
       const element = document.querySelector(selector) as HTMLElement | null;
       if (element) {
         element.style.visibility =
