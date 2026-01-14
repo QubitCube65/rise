@@ -52,6 +52,70 @@ namespace CommandIDs {
 
 const style = document.createElement('style');
 
+// LocalStorage key for persisting font size settings
+const FONT_SIZE_STORAGE_KEY = 'rise-font-size-settings';
+
+// Interface for font size settings
+interface FontSizeSettings {
+  codeFontSize: string;
+  headerFontSize: string;
+  outputFontSize: string;
+  tableFontSize: string;
+}
+
+// Default font size values
+const DEFAULT_FONT_SIZES: FontSizeSettings = {
+  codeFontSize: '20',
+  headerFontSize: '50',
+  outputFontSize: '20',
+  tableFontSize: '20'
+};
+
+/**
+ * Save font size settings to localStorage
+ */
+function saveFontSizeSettings(settings: FontSizeSettings): void {
+  try {
+    localStorage.setItem(FONT_SIZE_STORAGE_KEY, JSON.stringify(settings));
+    console.log('Font size settings saved:', settings);
+  } catch (error) {
+    console.error('Failed to save font size settings:', error);
+  }
+}
+
+/**
+ * Load font size settings from localStorage
+ * Returns default values if no saved settings exist
+ */
+function loadFontSizeSettings(): FontSizeSettings {
+  try {
+    const saved = localStorage.getItem(FONT_SIZE_STORAGE_KEY);
+    if (saved) {
+      const settings = JSON.parse(saved) as FontSizeSettings;
+      console.log('Font size settings loaded:', settings);
+      return settings;
+    }
+  } catch (error) {
+    console.error('Failed to load font size settings:', error);
+  }
+  console.log('Using default font size settings');
+  return { ...DEFAULT_FONT_SIZES };
+}
+
+/**
+ * Apply font size settings to the style element
+ */
+function applyFontSizeSettings(settings: FontSizeSettings): void {
+  SetStyleValue('--jp-code-font-size', settings.codeFontSize);
+  SetStyleValue('--jp-ui-font-size0-rise', settings.headerFontSize);
+  SetStyleValue('--jp-ui-font-size1-rise', (Number(settings.headerFontSize) * 0.8).toString());
+  SetStyleValue('--jp-ui-font-size2-rise', (Number(settings.headerFontSize) * 0.7).toString());
+  SetStyleValue('--jp-ui-font-size3-rise', (Number(settings.headerFontSize) * 0.6).toString());
+  SetStyleValue('--jp-ui-font-size4-rise', (Number(settings.headerFontSize) * 0.5).toString());
+  SetStyleValue('--jp-ui-code-output', settings.outputFontSize);
+  SetStyleValue('--jp-ui-table-font-size-rise', settings.tableFontSize);
+}
+
 function SetStyleValue(type:string, newValue:string) {
   const text = style.textContent?.replace(":root {", "")?.replace("}", "")?.replace("\n", "")?.split(";");
 
@@ -114,7 +178,7 @@ export const plugin: JupyterFrontEndPlugin<void> = {
     // Uncomment in dev mode to send logs to the parent window
     //Private.setupLog();
 
-    // Override css variables (change default values here if needed)
+    // Initialize style element with default values
     style.textContent = `
       :root {
         --jp-code-font-size: 20px !important;
@@ -128,6 +192,10 @@ export const plugin: JupyterFrontEndPlugin<void> = {
       }
     `;
     document.head.appendChild(style);
+
+    // Load and apply saved font size settings from localStorage
+    const savedSettings = loadFontSizeSettings();
+    applyFontSizeSettings(savedSettings);
 
     const trans = (translator ?? nullTranslator).load('rise');
 
@@ -967,12 +1035,19 @@ namespace Rise {
         body: contentWidget,
         buttons: [
           Dialog.cancelButton(),
+          Dialog.createButton({ label: 'Reset to Defaults' }),
           Dialog.okButton({ label: 'Apply' })
         ]
       });
 
       dialog.then(result => {
-        if (result.button.accept) {
+        if (result.button.label === 'Reset to Defaults') {
+          // Reset to default values
+          applyFontSizeSettings(DEFAULT_FONT_SIZES);
+          saveFontSizeSettings(DEFAULT_FONT_SIZES);
+          console.log('Font size settings reset to defaults');
+        } else if (result.button.accept) {
+          // Apply user-selected values
           SetStyleValue("--jp-code-font-size", codeFontSizeData.input.value);
           SetStyleValue("--jp-ui-table-font-size-rise", tableFontSizeData.input.value);
           SetStyleValue("--jp-ui-code-output", outputFontSizeData.input.value);
@@ -985,6 +1060,15 @@ namespace Rise {
             SetStyleValue("--jp-ui-font-size3-rise", (Number(headerSize) * 0.6).toString());
             SetStyleValue("--jp-ui-font-size4-rise", (Number(headerSize) * 0.5).toString());
           }
+
+          // Save settings to localStorage for persistence
+          const newSettings: FontSizeSettings = {
+            codeFontSize: codeFontSizeData.input.value,
+            headerFontSize: headerSizeData.input.value,
+            outputFontSize: outputFontSizeData.input.value,
+            tableFontSize: tableFontSizeData.input.value
+          };
+          saveFontSizeSettings(newSettings);
         }
 
         contentWidget.dispose();
