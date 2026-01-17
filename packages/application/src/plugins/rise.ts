@@ -1272,6 +1272,18 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
+    ///global keys:
+    Reveal.configure({ keyboard: false });
+    
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (event.repeat) return;
+
+    // verhindert Reveal-interne Listener
+    event.stopImmediatePropagation();
+
+    
+    }); 
+
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
       // check and set the scrolling slide when you start the whole thing
