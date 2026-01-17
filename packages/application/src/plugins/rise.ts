@@ -1280,7 +1280,47 @@ namespace Rise {
 
     // verhindert Reveal-interne Listener
     event.stopImmediatePropagation();
+    switch (event.key) {
 
+      case 'b':
+      case 'B':
+        event.preventDefault();
+        Reveal.togglePause();
+        break;
+
+      case '?':
+        if (event.shiftKey) {
+          event.preventDefault();
+          displayRiseHelp(commands, trans);
+        }
+        break;
+
+      case ',':
+        event.preventDefault();
+        toggleAllRiseButtons();
+        break;
+
+      case 'w':
+      case 'W':
+        event.preventDefault();
+        Reveal.toggleOverview();
+        break;
+
+      case ' ':
+        event.preventDefault();
+        event.shiftKey ? Reveal.prev() : Reveal.next();
+        break;
+
+      case 'Home':
+        event.preventDefault();
+        Reveal.slide(0);
+        break;
+
+      case 'End':
+        event.preventDefault();
+        Reveal.slide(Number.MAX_SAFE_INTEGER);
+        break;
+      }
     
     }); 
 
