@@ -1295,10 +1295,8 @@ namespace Rise {
         event.preventDefault();
         fullscreenHelp();
         break;
-
-
-    }, true); 
-
+    }, true}; 
+    )
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
       // check and set the scrolling slide when you start the whole thing
