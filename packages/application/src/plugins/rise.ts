@@ -1284,27 +1284,19 @@ namespace Rise {
         }
         break;
 
+      case 'h':
       case 'H':
         event.preventDefault();
         toggleAllRiseButtons();
         break;
 
-      case 'w':
-      case 'W':
+      case 'f':
+      case 'F':
         event.preventDefault();
-        Reveal.toggleOverview();
+        fullscreenHelp();
         break;
 
-      case 'Home':
-        event.preventDefault();
-        Reveal.slide(0);
-        break;
 
-      case 'End':
-        event.preventDefault();
-        Reveal.slide(Number.MAX_SAFE_INTEGER);
-        break;
-        
     }, true); 
 
     Reveal.addEventListener('ready', event => {
