@@ -1194,22 +1194,10 @@ namespace Rise {
         80: null, // p, up disabled
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
-        188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
-        190: null,
-        67: (event: KeyboardEvent) => {
-          // Shift+C for help menu
-          if (event.shiftKey) {
-            event.preventDefault();
-            openFontSizeMenu();
-          }
-        },
-        191: (event: KeyboardEvent) => {
-          // Shift+/ (= ?)
-          if (event.shiftKey) {
-            event.preventDefault();
-            displayRiseHelp(commands, trans);
-          }
-        }
+        88: null,
+        188: null, // comma, hard-wired to toggleAllRiseButtons
+        190: null
+        
       },
       plugins: []
     };
@@ -1275,11 +1263,12 @@ namespace Rise {
     ///global keys:
     Reveal.configure({ keyboard: false });
     
-    window.addEventListener('keydown', (event: KeyboardEvent) => {
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
     if (event.repeat) return;
 
     // verhindert Reveal-interne Listener
     event.stopImmediatePropagation();
+    event.preventDefault();
     switch (event.key) {
 
       case 'b':
@@ -1295,7 +1284,7 @@ namespace Rise {
         }
         break;
 
-      case ',':
+      case 'H':
         event.preventDefault();
         toggleAllRiseButtons();
         break;
@@ -1304,11 +1293,6 @@ namespace Rise {
       case 'W':
         event.preventDefault();
         Reveal.toggleOverview();
-        break;
-
-      case ' ':
-        event.preventDefault();
-        event.shiftKey ? Reveal.prev() : Reveal.next();
         break;
 
       case 'Home':
@@ -1320,9 +1304,8 @@ namespace Rise {
         event.preventDefault();
         Reveal.slide(Number.MAX_SAFE_INTEGER);
         break;
-      }
-    
-    }); 
+        
+    }, true); 
 
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
