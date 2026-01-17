@@ -1195,7 +1195,7 @@ namespace Rise {
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
         88: null,
-        188: null, // comma, hard-wired to toggleAllRiseButtons
+        188: toggleAllRiseButtons(), // comma, hard-wired to toggleAllRiseButtons
         190: null
         
       },
@@ -1260,9 +1260,7 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
-    ///global keys:
-    Reveal.configure({ keyboard: false });
-    
+    ///global keys:    
     document.addEventListener('keydown', (event: KeyboardEvent) => {
     if (event.repeat) return;
 
