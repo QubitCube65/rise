@@ -1270,33 +1270,26 @@ namespace Rise {
     event.stopImmediatePropagation();
     event.preventDefault();
     switch (event.key) {
-
       case 'b':
       case 'B':
-        event.preventDefault();
         Reveal.togglePause();
         break;
 
       case '?':
-        if (event.shiftKey) {
-          event.preventDefault();
-          displayRiseHelp(commands, trans);
-        }
+        displayRiseHelp(commands, trans);
         break;
 
       case 'h':
       case 'H':
-        event.preventDefault();
         toggleAllRiseButtons();
         break;
 
       case 'f':
       case 'F':
-        event.preventDefault();
         fullscreenHelp();
         break;
-    }, true}; 
-    )
+    }
+    });
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
       // check and set the scrolling slide when you start the whole thing
