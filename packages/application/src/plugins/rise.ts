@@ -1195,6 +1195,7 @@ namespace Rise {
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
         188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
+        190: null,
         67: (event: KeyboardEvent) => {
           // Shift+C for help menu
           if (event.shiftKey) {
