@@ -56,7 +56,6 @@ section.stack.present {
 
 /* Optional: Configure scrollable content area when scroll is enabled */
 body.rise-enabled section.rise-scroll {
-    margin-top: 100px;
-    height: 85vh;
+  margin-top: 100px;
+  height: 85vh;
 }
-

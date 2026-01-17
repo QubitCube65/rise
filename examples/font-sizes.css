@@ -24,6 +24,10 @@ body.rise-enabled div.inner_cell > div.text_cell_render.rendered_html > pre {
 }
 
 /* Font size for code within markdown cells */
-body.rise-enabled div.inner_cell > div.text_cell_render.rendered_html > pre > code {
+body.rise-enabled
+  div.inner_cell
+  > div.text_cell_render.rendered_html
+  > pre
+  > code {
   font-size: 70%;
 }

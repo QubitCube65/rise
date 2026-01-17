@@ -11,7 +11,5 @@
 
 /* Basic red background for flow elements */
 body.rise-enabled .flow {
-    background: red;
+  background: red;
 }
-
-
