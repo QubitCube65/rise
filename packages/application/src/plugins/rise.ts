@@ -877,11 +877,45 @@ namespace Rise {
 
   let isRevealInitialized = false;
 
+
   async function Revealer(
     panel: NotebookPanel,
-    selected_slide: [number, number]
+    selected_slide: [number, number],
+    commands: CommandRegistry,
+    trans: TranslationBundle
   ): Promise<void> {
     document.body.classList.add('rise-enabled');
+
+    //!!
+          const reveal_default_bindings: { [key: string]: (() => void) | null } = {
+            // RISE core shortcuts
+            '?': () => displayRiseHelp(commands, trans),
+            'f': () => fullscreenHelp(),
+            'F': () => fullscreenHelp(),
+
+            // Navigation
+            'w': () => Reveal.toggleOverview(),
+            'W': () => Reveal.toggleOverview(),
+            't': () => (Reveal.getPlugin('notes') as any)?.open(),
+            'T': () => (Reveal.getPlugin('notes') as any)?.open(),
+
+            // Chalkboard shortcuts
+            's': () => (window as any).RevealChalkboard?.colorNext(),
+            'S': () => (window as any).RevealChalkboard?.colorNext(),
+            'q': () => (window as any).RevealChalkboard?.colorPrev(),
+            'Q': () => (window as any).RevealChalkboard?.colorPrev(),
+            '\\': () => (window as any).RevealChalkboard?.download(),
+            '=': () => (window as any).RevealChalkboard?.reset(),
+            '+': () => (window as any).RevealChalkboard?.reset(),
+            '-': () => (window as any).RevealChalkboard?.clear(),
+            '_': () => (window as any).RevealChalkboard?.clear(),
+
+            // Alternative zu [ und ] - funktioniert auf allen Tastaturen
+            'c': () => (window as any).RevealChalkboard?.toggleChalkboard(),
+            'C': () => (window as any).RevealChalkboard?.toggleChalkboard(),
+            'n': () => (window as any).RevealChalkboard?.toggleNotesCanvas(),
+            'N': () => (window as any).RevealChalkboard?.toggleNotesCanvas()
+          };
 
     // Allow the panel to receive focus, to send it to the notebook.
     // NOTES:
@@ -1019,6 +1053,13 @@ namespace Rise {
       // @ts-ignore
       options[setting] = complete_config[setting];
     }
+
+     // Merge custom key bindings into options.keyboard
+        for (const key in reveal_default_bindings) {
+          if (reveal_default_bindings[key]) {
+            options.keyboard[key] = reveal_default_bindings[key];
+          }
+        }
 
     ////////// set up the leap motion integration if configured
     // TODO leap plugin does not exist
@@ -1238,7 +1279,7 @@ namespace Rise {
     // Preparing the new reveal-compatible structure
     const selected_slide = markupSlides(notebook);
     // Adding the reveal stuff
-    Revealer(panel, selected_slide);
+    Revealer(panel, selected_slide, commands, trans);
     // Minor modifications for usability
     addHelpButton(panel, commands, trans);
   }
