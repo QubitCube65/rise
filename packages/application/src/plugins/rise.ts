@@ -1049,7 +1049,7 @@ namespace Rise {
   }
   //'#help-b', ...
   function toggleAllRiseButtons() {
-    for (const selector of ['#toggle-chalkboard', '#toggle-notes']) {
+    for (const selector of ['#help-b', '#toggle-chalkboard', '#toggle-notes']) {
       const element = document.querySelector(selector) as HTMLElement | null;
       if (element) {
         element.style.visibility =
@@ -1183,7 +1183,7 @@ namespace Rise {
         36: null, // Home - first slide disabled (will be set in custom keys)
         38: null, // up arrow disabled
         40: null, // down arrow disabled
-        66: null, // b, black pause disabled, use period or forward slash
+        66: null, // b, black pause disabled, use period or forward slash -> using b event now
         70: null, // disable fullscreen inside the slideshow, makes codemirror unreliable
         72: null, // h, left disabled
         74: null, // j, down disabled
@@ -1195,7 +1195,7 @@ namespace Rise {
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
         88: null,
-        188: toggleAllRiseButtons(), // comma, hard-wired to toggleAllRiseButtons
+        188: null, // comma, hard-wired to toggleAllRiseButtons (disabled, it's h for help instead)
         190: null
         
       },
@@ -1262,9 +1262,17 @@ namespace Rise {
 
     ///global keys:    
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-    if (event.repeat) return;
+    if (!document.body.classList.contains('rise-enabled')) return;
 
-    // verhindert Reveal-interne Listener
+    const k = event.key;
+    const isKey = 
+      k === 'b' || k === 'B' ||
+      k === '?' ||
+      k === 'h' || k === 'H' ||
+      k === 'f' || k === 'F';
+
+      if (!isKey) return;
+
     event.stopImmediatePropagation();
     event.preventDefault();
     switch (event.key) {
@@ -1286,8 +1294,13 @@ namespace Rise {
       case 'F':
         fullscreenHelp();
         break;
+
+      case ' ':
+        event.shiftKey ? Reveal.prev() : Reveal.next();
+        break;
     }
-    });
+    }, true);
+
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
       // check and set the scrolling slide when you start the whole thing
@@ -1309,14 +1322,6 @@ namespace Rise {
       autoSelectHook(panel.content);
     });
 
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      //? button
-      if (event.shiftKey && event.key === '?') {
-        event.preventDefault();
-        displayRiseHelp(commands, trans);
-      }
-    });
-
     // Sync when an output is generated.
     setupOutputObserver();
 
@@ -1324,10 +1329,11 @@ namespace Rise {
     setStartingSlide(selected_slide);
     addHeaderFooterOverlay();
 
-    if (!complete_config.show_buttons_on_startup) {
-      /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 2000);
-    }
+    //Disabled the timeout for buttons
+    //if (!complete_config.show_buttons_on_startup) {
+    //  /* safer, and nicer too, to wait for reveal extensions to start */
+    //  setTimeout(toggleAllRiseButtons, 2000);
+    //}
 
     panel.content.activeCellChanged.connect((sender, cell) => {
       // Move to active cell
@@ -1407,10 +1413,10 @@ namespace Rise {
     ${helpListItem(CommandIDs.riseLastSlide)}
     ${helpListItem(CommandIDs.riseToggleOverview)}
     ${helpListItem(CommandIDs.riseNotesOpen)}
-    <li><kbd>${CommandRegistry.formatKeystroke(',')}</kbd>: ${
+    <li><kbd>${CommandRegistry.formatKeystroke('h')}</kbd>: ${
       helpStrings[CommandIDs.riseToggleAllButtons]
     }</li>
-    <li><kbd>${CommandRegistry.formatKeystroke('/')}</kbd>: ${trans.__(
+    <li><kbd>${CommandRegistry.formatKeystroke('b')}</kbd>: ${trans.__(
       'black screen'
     )}</li>
     <li><strong>${trans.__('less useful')}:</strong></li>
