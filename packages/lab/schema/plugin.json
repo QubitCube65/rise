@@ -105,7 +105,7 @@
     },
     {
       "command": "RISE:chalkboard-download",
-      "keys": ["\\"],
+      "keys": ["D"],
       "selector": ".lm-Widget.reveal .jp-mod-commandMode"
     },
     {

@@ -879,7 +879,9 @@ namespace Rise {
 
   async function Revealer(
     panel: NotebookPanel,
-    selected_slide: [number, number]
+    selected_slide: [number, number],
+    commands: CommandRegistry,
+    trans: TranslationBundle
   ): Promise<void> {
     document.body.classList.add('rise-enabled');
 
@@ -988,7 +990,8 @@ namespace Rise {
         36: null, // Home - first slide disabled (will be set in custom keys)
         38: null, // up arrow disabled
         40: null, // down arrow disabled
-        66: null, // b, black pause disabled, use period or forward slash
+        66: null, // b, black pause disabled, use period or forward slash -> using b event now
+        68: null, // d, scancode disabled, now used manually for downloading chalkboard
         70: null, // disable fullscreen inside the slideshow, makes codemirror unreliable
         72: null, // h, left disabled
         74: null, // j, down disabled
@@ -998,9 +1001,13 @@ namespace Rise {
         79: null, // o disabled
         80: null, // p, up disabled
         84: null, // t, modified in the custom notes plugin.
-        87: null, // w, toggle overview
-        // is it ok?
-        188: toggleAllRiseButtons // comma, hard-wired to toggleAllRiseButtons
+        86: null, // v, copy cell/blackscreen disabled
+        188: null, // comma, hard-wired to toggleAllRiseButtons (disabled, it's 'h' for help instead)
+        190: null, // scancode for blackscreen disabled, it's 'l' instead
+        191: null, // disabled for less confusion
+        219: null, // '' (and it blackened the screen without toggling)
+        220: null, // ''
+        221: null // ''
       },
       plugins: []
     };
@@ -1063,6 +1070,85 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
+    //Keyboard shortcuts specific to RISE (add more shortcuts here manually):    
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
+
+    const k = event.key;
+    const isKey = 
+      k === 'l' || k === 'L' ||
+      k === 'h' || k === 'H' ||
+      k === 'f' || k === 'F' ||
+      k === 's' || k === 'S' ||
+      k === 'q' || k === 'Q' ||
+      k === 'd' || k === 'D' ||
+      k === ' ' || k === ']' ||
+      k === '[' || k === 'H' ||
+      k === '=' || k === '-' ||
+      k === '?';
+
+    if (!isKey) return;
+
+    event.stopImmediatePropagation();
+    event.preventDefault();
+    switch (event.key) {
+      case '?':
+        displayRiseHelp(commands, trans);
+        break;
+
+      case 'h':
+      case 'H':
+        toggleAllRiseButtons();
+        break;
+
+      case 'f':
+      case 'F':
+        fullscreenHelp();
+        break;
+
+      case 'l':
+      case 'l':
+        Reveal.togglePause();
+        break;
+      
+      case ' ':
+        event.shiftKey ? Reveal.prev() : Reveal.next();
+        break;
+
+      case '[': //toggle full size chalkboard
+        (window as any).RevealChalkboard?.toggleChalkboard();
+        break;
+
+      case ']': //toggle notes chalkboard
+        (window as any).RevealChalkboard?.toggleNotesCanvas();
+        break;
+
+      case 's': //cycle to next pen color
+      case 'S':
+        (window as any).RevealChalkboard?.colorNext();
+        break;
+      
+      case 'q': //cycle to previous pen color
+      case 'Q':
+        (window as any).RevealChalkboard?.colorPrev();
+        break;
+
+      case '=': //reset chalkboard data on current slide
+        (window as any).RevealChalkboard?.reset();
+        break;
+
+      case '-': //clear full size chalkboard
+        (window as any).RevealChalkboard?.clear();
+        break;
+
+      case 'd':
+      case 'D':
+        (window as any).RevealChalkboard?.download();
+        break;
+    }
+    }, true);
+
+
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
       // check and set the scrolling slide when you start the whole thing
@@ -1093,7 +1179,7 @@ namespace Rise {
 
     if (!complete_config.show_buttons_on_startup) {
       /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 2000);
+      setTimeout(toggleAllRiseButtons, 10000);
     }
 
     panel.content.activeCellChanged.connect((sender, cell) => {
@@ -1124,7 +1210,7 @@ namespace Rise {
     // Preparing the new reveal-compatible structure
     const selected_slide = markupSlides(notebook);
     // Adding the reveal stuff
-    Revealer(panel, selected_slide);
+    Revealer(panel, selected_slide, commands, trans);
     // Minor modifications for usability
     addHelpButton(panel, commands, trans);
   }
@@ -1171,10 +1257,10 @@ namespace Rise {
     ${helpListItem(CommandIDs.riseLastSlide)}
     ${helpListItem(CommandIDs.riseToggleOverview)}
     ${helpListItem(CommandIDs.riseNotesOpen)}
-    <li><kbd>${CommandRegistry.formatKeystroke(',')}</kbd>: ${
+    <li><kbd>${CommandRegistry.formatKeystroke('H')}</kbd>: ${
       helpStrings[CommandIDs.riseToggleAllButtons]
     }</li>
-    <li><kbd>${CommandRegistry.formatKeystroke('/')}</kbd>: ${trans.__(
+    <li><kbd>${CommandRegistry.formatKeystroke('L')}</kbd>: ${trans.__(
       'black screen'
     )}</li>
     <li><strong>${trans.__('less useful')}:</strong></li>
