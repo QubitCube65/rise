@@ -75,7 +75,7 @@
     },
     {
       "command": "RISE:chalkboard-clear",
-      "keys": ["minus"],
+      "keys": ["Minus"],
       "selector": ".lm-Widget.reveal .jp-mod-commandMode"
     },
     {

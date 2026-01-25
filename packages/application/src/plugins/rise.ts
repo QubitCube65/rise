@@ -1416,7 +1416,7 @@ namespace Rise {
             break;
 
           case '[': //toggle full size chalkboard
-            commands.execute(CommandIDs.riseChalkboardToggle);
+            (window as any).RevealChalkboard?.toggleChalkboard();
             break;
 
           case ']': //toggle notes chalkboard
