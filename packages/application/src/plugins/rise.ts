@@ -1471,14 +1471,6 @@ namespace Rise {
       autoSelectHook(panel.content);
     });
 
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      //? button
-      if (event.shiftKey && event.key === '?') {
-        event.preventDefault();
-        displayRiseHelp(commands, trans);
-      }
-    });
-
     // Sync when an output is generated.
     setupOutputObserver();
 
