@@ -1133,40 +1133,56 @@ namespace Rise {
 
       // Override colorNext
       chalkboard.colorNext = function() {
+        // Get current color index before calling original function
+        let currentIndex = 0;
+        const firstPalette = document.querySelector('.palette');
+        if (firstPalette) {
+          const activeButton = firstPalette.querySelector('li.active');
+          if (activeButton) {
+            currentIndex = parseInt(activeButton.getAttribute('data-color') || '0');
+          }
+        }
+
+        // Call original function to change the actual color
         if (originalColorNext) {
           originalColorNext.call(this);
         }
 
+        // Calculate new index (current + 1, with wraparound)
         setTimeout(() => {
           const palettes = document.querySelectorAll('.palette');
           palettes.forEach((palette: Element) => {
-            const activeButton = palette.querySelector('li.active');
-            if (activeButton) {
-              const currentIndex = parseInt(activeButton.getAttribute('data-color') || '0');
-              const colorButtons = palette.querySelectorAll('li[data-color]');
-              const nextIndex = (currentIndex + 1) % colorButtons.length;
-              updatePaletteHighlight(palette, nextIndex);
-            }
+            const colorButtons = palette.querySelectorAll('li[data-color]');
+            const newIndex = (currentIndex + 1) % colorButtons.length;
+            updatePaletteHighlight(palette, newIndex);
           });
         }, 10);
       };
 
       // Override colorPrev
       chalkboard.colorPrev = function() {
+        // Get current color index before calling original function
+        let currentIndex = 0;
+        const firstPalette = document.querySelector('.palette');
+        if (firstPalette) {
+          const activeButton = firstPalette.querySelector('li.active');
+          if (activeButton) {
+            currentIndex = parseInt(activeButton.getAttribute('data-color') || '0');
+          }
+        }
+
+        // Call original function to change the actual color
         if (originalColorPrev) {
           originalColorPrev.call(this);
         }
 
+        // Calculate new index (current - 1, with wraparound)
         setTimeout(() => {
           const palettes = document.querySelectorAll('.palette');
           palettes.forEach((palette: Element) => {
-            const activeButton = palette.querySelector('li.active');
-            if (activeButton) {
-              const currentIndex = parseInt(activeButton.getAttribute('data-color') || '0');
-              const colorButtons = palette.querySelectorAll('li[data-color]');
-              const prevIndex = currentIndex === 0 ? colorButtons.length - 1 : currentIndex - 1;
-              updatePaletteHighlight(palette, prevIndex);
-            }
+            const colorButtons = palette.querySelectorAll('li[data-color]');
+            const newIndex = currentIndex === 0 ? colorButtons.length - 1 : currentIndex - 1;
+            updatePaletteHighlight(palette, newIndex);
           });
         }, 10);
       };
@@ -1181,6 +1197,8 @@ namespace Rise {
       // Customize chalkboard palette after reveal is ready
       if (enable_chalkboard) {
         setTimeout(customizeChalkboardPalette, 500);
+        setTimeout(customizeChalkboardPalette, 1000);
+        setTimeout(customizeChalkboardPalette, 2000);
       }
     });
 
