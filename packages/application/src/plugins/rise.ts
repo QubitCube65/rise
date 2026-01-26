@@ -1404,12 +1404,12 @@ namespace Rise {
 
           case 'l':
           case 'L': 
-            (window as any).RevealChalkboard?.toggleChalkboard();
+            commands.execute(CommandIDs.riseChalkboardToggle);
             break;
 
           case 'p':
           case 'P': 
-            (window as any).RevealChalkboard?.toggleNotesCanvas();
+            commands.execute(CommandIDs.riseChalkboardToggleNotes);
             break;
 
           case 's': 
