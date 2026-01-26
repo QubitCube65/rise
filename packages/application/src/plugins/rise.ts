@@ -1365,8 +1365,8 @@ namespace Rise {
         
         const k = event.key;
         const isKey =
-          k === 'l' ||
-          k === 'L' ||
+        //  k === 'l' ||
+        //  k === 'L' ||
           k === 'p' ||
           k === 'P' ||
           k === 'h' ||
@@ -1420,10 +1420,10 @@ namespace Rise {
             (window as any).RevealChalkboard?.toggleChalkboard();
             break;
 
-          case 'l':
-          case 'L': //toggle notes chalkboard
-            (window as any).RevealChalkboard?.toggleNotesCanvas();
-            break;
+         // case 'l':
+         // case 'L': //toggle notes chalkboard
+         //   (window as any).RevealChalkboard?.toggleNotesCanvas();
+         //   break;
 
           case 's': //cycle to next pen color
           case 'S':
