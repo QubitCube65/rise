@@ -1269,14 +1269,6 @@ namespace Rise {
         38: null, // up arrow disabled
         40: null, // down arrow disabled
         66: null, // b, black pause disabled, use period or forward slash -> using b event now
-        67: (event: KeyboardEvent) => {
-          // Shift+C for help menu
-          if (event.shiftKey) {
-            event.preventDefault();
-            openFontSizeMenu();
-          }
-        },
-        68: null, // d, scancode disabled, now used manually for downloading chalkboard
         70: null, // disable fullscreen inside the slideshow, makes codemirror unreliable
         72: null, // h, left disabled
         74: null, // j, down disabled
@@ -1286,13 +1278,8 @@ namespace Rise {
         79: null, // o disabled
         80: null, // p, up disabled
         84: null, // t, modified in the custom notes plugin.
-        86: null, // v, copy cell/blackscreen disabled
-        188: null, // comma, hard-wired to toggleAllRiseButtons (disabled, it's 'h' for help instead)
-        190: null, // scancode for blackscreen disabled, it's 'l' instead
-        191: null, // disabled for less confusion
-        219: null, // '' (and it blackened the screen without toggling)
-        220: null, // ''
-        221: null // ''
+        87: null, // v, copy cell/blackscreen disabled
+        188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons (disabled, it's 'h' for help instead)
       },
       plugins: []
     };
@@ -1355,6 +1342,7 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
+    /*
     //Keyboard shortcuts specific to RISE (add more shortcuts here manually):
     document.addEventListener(
       'keydown',
@@ -1364,9 +1352,9 @@ namespace Rise {
         } //if slides are not opened, do nothing
         
         const k = event.key;
-       // const isKey =
-        //  k === 'l' ||
-        //  k === 'L' ||
+        const isKey =
+          k === 'l' ||
+          k === 'L' ||
           k === 'p' ||
           k === 'P' ||
           k === 'h' ||
@@ -1385,6 +1373,10 @@ namespace Rise {
           k === '-' ||
           k === '.' ||
           k === '?';
+
+        if(!isKey){
+          return;
+        }
 
         event.stopImmediatePropagation();
         event.preventDefault();
@@ -1411,7 +1403,7 @@ namespace Rise {
             event.shiftKey ? Reveal.prev() : Reveal.next();
             break;
 
-          /*case 'p':
+          case 'p':
           case 'P': //toggle full size chalkboard
             (window as any).RevealChalkboard?.toggleChalkboard();
             break;
@@ -1442,11 +1434,11 @@ namespace Rise {
           case 'd':
           case 'D':
             (window as any).RevealChalkboard?.download();
-            break; */
+            break;
         }
       },
       true
-    );
+    );*/
 
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
