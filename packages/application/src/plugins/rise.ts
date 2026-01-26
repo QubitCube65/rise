@@ -1364,7 +1364,7 @@ namespace Rise {
         } //if slides are not opened, do nothing
         
         const k = event.key;
-        const isKey =
+       // const isKey =
         //  k === 'l' ||
         //  k === 'L' ||
           k === 'p' ||
@@ -1385,10 +1385,6 @@ namespace Rise {
           k === '-' ||
           k === '.' ||
           k === '?';
-
-        if (!isKey) {
-          return;
-        }
 
         event.stopImmediatePropagation();
         event.preventDefault();
@@ -1415,15 +1411,15 @@ namespace Rise {
             event.shiftKey ? Reveal.prev() : Reveal.next();
             break;
 
-          case 'p':
+          /*case 'p':
           case 'P': //toggle full size chalkboard
             (window as any).RevealChalkboard?.toggleChalkboard();
             break;
 
-         // case 'l':
-         // case 'L': //toggle notes chalkboard
-         //   (window as any).RevealChalkboard?.toggleNotesCanvas();
-         //   break;
+          case 'l':
+          case 'L': //toggle notes chalkboard
+            (window as any).RevealChalkboard?.toggleNotesCanvas();
+            break;
 
           case 's': //cycle to next pen color
           case 'S':
@@ -1446,7 +1442,7 @@ namespace Rise {
           case 'd':
           case 'D':
             (window as any).RevealChalkboard?.download();
-            break;
+            break; */
         }
       },
       true
