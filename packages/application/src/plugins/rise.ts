@@ -1362,7 +1362,7 @@ namespace Rise {
         if (!document.body.classList.contains('rise-enabled')) {
           return;
         } //if slides are not opened, do nothing
-
+        
         const k = event.key;
         const isKey =
           k === 'l' ||
