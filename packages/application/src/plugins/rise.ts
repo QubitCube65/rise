@@ -1367,6 +1367,8 @@ namespace Rise {
         const isKey =
           k === 'l' ||
           k === 'L' ||
+          k === 'p' ||
+          k === 'P' ||
           k === 'h' ||
           k === 'H' ||
           k === 'f' ||
@@ -1378,8 +1380,6 @@ namespace Rise {
           k === 'd' ||
           k === 'D' ||
           k === ' ' ||
-          k === ']' ||
-          k === '[' ||
           k === 'H' ||
           k === '=' ||
           k === '-' ||
@@ -1415,11 +1415,13 @@ namespace Rise {
             event.shiftKey ? Reveal.prev() : Reveal.next();
             break;
 
-          case '[': //toggle full size chalkboard
+          case 'p':
+          case 'P': //toggle full size chalkboard
             (window as any).RevealChalkboard?.toggleChalkboard();
             break;
 
-          case ']': //toggle notes chalkboard
+          case 'l':
+          case 'L': //toggle notes chalkboard
             (window as any).RevealChalkboard?.toggleNotesCanvas();
             break;
 
