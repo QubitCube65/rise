@@ -1342,7 +1342,7 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
-    /*
+    
     //Keyboard shortcuts specific to RISE (add more shortcuts here manually):
     document.addEventListener(
       'keydown',
@@ -1368,7 +1368,6 @@ namespace Rise {
           k === 'd' ||
           k === 'D' ||
           k === ' ' ||
-          k === 'H' ||
           k === '=' ||
           k === '-' ||
           k === '.' ||
@@ -1377,9 +1376,9 @@ namespace Rise {
         if(!isKey){
           return;
         }
-
         event.stopImmediatePropagation();
         event.preventDefault();
+
         switch (event.key) {
           case '?':
             displayRiseHelp(commands, trans);
@@ -1403,31 +1402,31 @@ namespace Rise {
             event.shiftKey ? Reveal.prev() : Reveal.next();
             break;
 
-          case 'p':
-          case 'P': //toggle full size chalkboard
+          case 'l':
+          case 'L': 
             (window as any).RevealChalkboard?.toggleChalkboard();
             break;
 
-          case 'l':
-          case 'L': //toggle notes chalkboard
+          case 'p':
+          case 'P': 
             (window as any).RevealChalkboard?.toggleNotesCanvas();
             break;
 
-          case 's': //cycle to next pen color
+          case 's': 
           case 'S':
             (window as any).RevealChalkboard?.colorNext();
             break;
 
-          case 'q': //cycle to previous pen color
+          case 'q':
           case 'Q':
             (window as any).RevealChalkboard?.colorPrev();
             break;
 
-          case '=': //reset chalkboard data on current slide
+          case '=': 
             (window as any).RevealChalkboard?.reset();
             break;
 
-          case '-': //clear full size chalkboard
+          case '-': 
             (window as any).RevealChalkboard?.clear();
             break;
 
@@ -1438,7 +1437,7 @@ namespace Rise {
         }
       },
       true
-    );*/
+    );
 
      // Customize chalkboard palettes after initialization
     function customizeChalkboardPalette() {
