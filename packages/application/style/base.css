@@ -15,7 +15,7 @@
   transition-timing-function: ease;
 }
 
-.rise-enabled {
+body.rise-enabled {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -33,8 +33,8 @@
     chalkboard options */
 }
 
-.rise-enabled .reveal table th,
-.rise-enabled .reveal table td {
+body.rise-enabled .reveal table th,
+body.rise-enabled .reveal table td {
   border-bottom: none;
 }
 
@@ -43,14 +43,14 @@
   background-color: #fff;
 }
 
-.rise-enabled .reveal.fade {
+body.rise-enabled .reveal.fade {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   opacity: 1;
 }
 
-.rise-enabled .reveal pre {
+body.rise-enabled .reveal pre {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -61,7 +61,7 @@
   overflow: hidden;
 }
 
-.rise-enabled .reveal section img {
+body.rise-enabled .reveal section img {
   /* transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease; */
@@ -70,15 +70,15 @@
   transition: none;
 }
 
-.rise-enabled .reveal a {
+body.rise-enabled .reveal a {
   color: #2980b9;
 }
 
-.rise-enabled .reveal a:hover {
+body.rise-enabled .reveal a:hover {
   color: #50a0ff;
 }
 
-.rise-enabled .reveal .slides {
+body.rise-enabled .reveal .slides {
   width: 100% !important;
   transition-property: all;
   transition-duration: 0.2s;
@@ -87,7 +87,7 @@
   font-size: 160%;
 }
 
-.rise-enabled .reveal .slide-number {
+body.rise-enabled .reveal .slide-number {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -101,56 +101,56 @@
   background-color: transparent;
 }
 
-.rise-enabled .reveal .controls .navigate-left,
-.rise-enabled .reveal .controls .navigate-left.enabled {
+body.rise-enabled .reveal .controls .navigate-left,
+body.rise-enabled .reveal .controls .navigate-left.enabled {
   border-right-color: #727272;
 }
 
-.rise-enabled .reveal .controls .navigate-left.enabled:hover,
-.rise-enabled .reveal .controls .navigate-left.enabled.enabled:hover {
+body.rise-enabled .reveal .controls .navigate-left.enabled:hover,
+body.rise-enabled .reveal .controls .navigate-left.enabled.enabled:hover {
   border-right-color: #dfdfdf;
 }
 
-.rise-enabled .reveal .controls .navigate-right,
-.rise-enabled .reveal .controls .navigate-right.enabled {
+body.rise-enabled .reveal .controls .navigate-right,
+body.rise-enabled .reveal .controls .navigate-right.enabled {
   border-left-color: #727272;
 }
 
-.rise-enabled .reveal .controls .navigate-right.enabled:hover,
-.rise-enabled .reveal .controls .navigate-right.enabled.enabled:hover {
+body.rise-enabled .reveal .controls .navigate-right.enabled:hover,
+body.rise-enabled .reveal .controls .navigate-right.enabled.enabled:hover {
   border-left-color: #dfdfdf;
 }
 
-.rise-enabled .reveal .controls .navigate-up,
-.rise-enabled .reveal .controls .navigate-up.enabled {
+body.rise-enabled .reveal .controls .navigate-up,
+body.rise-enabled .reveal .controls .navigate-up.enabled {
   border-bottom-color: #727272;
 }
 
-.rise-enabled .reveal .controls .navigate-up.enabled:hover,
-.rise-enabled .reveal .controls .navigate-up.enabled.enabled:hover {
+body.rise-enabled .reveal .controls .navigate-up.enabled:hover,
+body.rise-enabled .reveal .controls .navigate-up.enabled.enabled:hover {
   border-bottom-color: #dfdfdf;
 }
 
-.rise-enabled .reveal .controls .navigate-down,
-.rise-enabled .reveal .controls .navigate-down.enabled {
+body.rise-enabled .reveal .controls .navigate-down,
+body.rise-enabled .reveal .controls .navigate-down.enabled {
   border-top-color: #727272;
 }
 
-.rise-enabled .reveal .controls .navigate-down.enabled:hover,
-.rise-enabled .reveal .controls .navigate-down.enabled.enabled:hover {
+body.rise-enabled .reveal .controls .navigate-down.enabled:hover,
+body.rise-enabled .reveal .controls .navigate-down.enabled.enabled:hover {
   border-top-color: #dfdfdf;
 }
 
-.rise-enabled .reveal .progress {
+body.rise-enabled .reveal .progress {
   margin-bottom: 0;
 }
 
-.rise-enabled .reveal .progress span {
+body.rise-enabled .reveal .progress span {
   background: #727272;
 }
 
-.rise-enabled .reveal .reveal-skip,
-.rise-enabled .reveal .reveal-notes {
+body.rise-enabled .reveal .reveal-skip,
+body.rise-enabled .reveal .reveal-notes {
   display: none;
 }
 
@@ -167,15 +167,15 @@
   transition-timing-function: ease;
 }
 
-.rise-enabled .jp-NotebookPanel {
+body.rise-enabled .jp-NotebookPanel {
   overflow: hidden;
 }
 
-.rise-enabled .jp-NotebookPanel.reveal {
+body.rise-enabled .jp-NotebookPanel.reveal {
   padding-top: 0;
 }
 
-.rise-enabled .jp-Notebook {
+body.rise-enabled .jp-Notebook {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -187,27 +187,27 @@
 }
 
 /* TODO did not find .widget-area in classic */
-.rise-enabled .widget-area .form-control,
-.rise-enabled .widget-area .dropdown-menu,
-.rise-enabled .widget-area .btn {
+body.rise-enabled .widget-area .form-control,
+body.rise-enabled .widget-area .dropdown-menu,
+body.rise-enabled .widget-area .btn {
   font-size: inherit;
 }
 
-.rise-enabled .widget-area .dropdown-menu {
+body.rise-enabled .widget-area .dropdown-menu {
   margin: 0;
 
   /* cancel the settings from reveal */
 }
 
-.rise-enabled .jp-Cell li {
+body.rise-enabled .jp-Cell li {
   line-height: 160%;
 }
 
-.rise-enabled .jp-InputArea pre {
+body.rise-enabled .jp-InputArea pre {
   font-size: 14px;
 }
 
-.rise-enabled .jp-InputPrompt {
+body.rise-enabled .jp-InputPrompt {
   font-size: 0.9rem;
   transition-property: all;
   transition-duration: 0.2s;
@@ -216,69 +216,64 @@
   /* font-size: 90%; */
 }
 
-.rise-enabled .jp-OutputArea pre {
-  font-size: var(--jp-ui-code-output);
+body.rise-enabled .jp-OutputArea pre {
+  font-size: 14px;
 }
 
-.rise-enabled .jp-OutputPrompt {
+body.rise-enabled .jp-OutputPrompt {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   margin-top: 2px;
 }
 
-.rise-enabled .jp-OutputArea-output {
+body.rise-enabled .jp-OutputArea-output {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
   margin-top: 0.05em;
 }
 
-.rise-enabled .jp-MarkdownCell,
-.rise-enabled .jp-RawCell {
+body.rise-enabled .jp-MarkdownCell,
+body.rise-enabled .jp-RawCell {
   font-size: 160%;
 }
 
-.rise-enabled .jp-MarkdownCell .jp-InputPrompt,
-.rise-enabled .jp-MarkdownCell .jp-OutputPrompt,
-.rise-enabled .jp-RawCell .jp-InputPrompt,
-.rise-enabled .jp-RawCell .jp-OutputPrompt {
+body.rise-enabled .jp-MarkdownCell .jp-InputPrompt,
+body.rise-enabled .jp-MarkdownCell .jp-OutputPrompt,
+body.rise-enabled .jp-RawCell .jp-InputPrompt,
+body.rise-enabled .jp-RawCell .jp-OutputPrompt {
   display: none;
 }
 
-.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
+body.rise-enabled .jp-MarkdownCell.jp-mod-rendered .jp-RenderedHTMLCommon {
   overflow-x: hidden;
   overflow-y: hidden;
 }
 
-.rise-enabled .jp-RenderedHTMLCommon h1 {
-  font-size: var(--jp-ui-font-size0-rise);
+body.rise-enabled .jp-RenderedHTMLCommon h1 {
   font-weight: bold;
 }
 
-.rise-enabled .jp-RenderedHTMLCommon h2 {
-  font-size: var(--jp-ui-font-size1-rise);
+body.rise-enabled .jp-RenderedHTMLCommon h2 {
   font-weight: bold;
 }
 
-.rise-enabled .jp-RenderedHTMLCommon h3 {
-  font-size: var(--jp-ui-font-size2-rise);
+body.rise-enabled .jp-RenderedHTMLCommon h3 {
   font-weight: bold;
 }
 
-.rise-enabled .jp-RenderedHTMLCommon h4 {
-  font-size: var(--jp-ui-font-size3-rise);
+body.rise-enabled .jp-RenderedHTMLCommon h4 {
   font-weight: bold;
-  /* font-style: italic; */
+  font-style: italic;
 }
 
-.rise-enabled .jp-RenderedHTMLCommon h5 {
-  font-size: var(--jp-ui-font-size4-rise);
+body.rise-enabled .jp-RenderedHTMLCommon h5 {
   font-weight: bold;
-  /* font-style: italic; */
+  font-style: italic;
 }
 
-.rise-enabled .CodeMirror {
+body.rise-enabled .CodeMirror {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -288,21 +283,21 @@
 }
 
 /* Rise Reveal miscellaneous */
-.rise-enabled a.anchor-link {
+body.rise-enabled a.anchor-link {
   display: none;
 }
 
-.rise-enabled html {
+body.rise-enabled html {
   overflow-y: auto;
 }
 
-.rise-enabled .reveal blockquote p:first-child,
-.rise-enabled .reveal blockquote p:last-child {
+body.rise-enabled .reveal blockquote p:first-child,
+body.rise-enabled .reveal blockquote p:last-child {
   display: inherit;
 }
 
 /* TODO */
-.rise-enabled .jp-Dialog-body kbd {
+body.rise-enabled .jp-Dialog-body kbd {
   padding: 0.1em 0.6em;
   border: 1px solid #ccc;
   font-size: 11px;
@@ -327,7 +322,7 @@
   top: 0;
 }
 
-.rise-enabled #header {
+body.rise-enabled #header {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -336,7 +331,7 @@
 }
 
 /* TODO */
-.rise-enabled #site {
+body.rise-enabled #site {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease;
@@ -344,20 +339,20 @@
 }
 
 /* TODO */
-.rise-enabled #ipython-main-app {
+body.rise-enabled #ipython-main-app {
   position: static;
 }
 
-.rise-enabled ::-webkit-scrollbar {
+body.rise-enabled ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-.rise-enabled ::-webkit-scrollbar * {
+body.rise-enabled ::-webkit-scrollbar * {
   background: transparent;
 }
 
-.rise-enabled ::-webkit-scrollbar-thumb {
+body.rise-enabled ::-webkit-scrollbar-thumb {
   background: #727272 !important;
 }
 
@@ -365,7 +360,7 @@
   display: none;
 }
 
-.rise-enabled #notescanvas {
+body.rise-enabled #notescanvas {
   display: block !important;
   position: absolute;
   top: 0;
@@ -375,7 +370,7 @@
   display: none;
 }
 
-.rise-enabled #chalkboard {
+body.rise-enabled #chalkboard {
   display: block !important;
 }
 
@@ -383,36 +378,32 @@
   display: none;
 }
 
-.rise-enabled #help-b,
-.rise-enabled .chalkboard-button {
+body.rise-enabled #help-b,
+body.rise-enabled .chalkboard-button {
   color: #727272;
   position: fixed !important;
   z-index: 30;
   cursor: pointer;
 }
 
-.rise-enabled #help-b {
+body.rise-enabled #help-b {
   left: 0.6em;
   bottom: 0.55em;
 }
 
-.rise-enabled .chalkboard-button i {
+body.rise-enabled .chalkboard-button i {
   display: block !important;
   bottom: 1em !important;
   font-size: 1.8em !important;
   color: #727272 !important;
 }
 
-.rise-enabled #toggle-chalkboard.chalkboard-button {
+body.rise-enabled #toggle-chalkboard.chalkboard-button {
   left: 4em !important;
 }
 
-.rise-enabled #toggle-notes {
+body.rise-enabled #toggle-notes {
   left: 7em !important;
-}
-
-.rise-enabled .jp-RenderedHTMLCommon table {
-  font-size: var(--jp-ui-table-font-size-rise);
 }
 
 /* fix for reveal dark themes */
@@ -465,4 +456,145 @@ body.rise-enabled.theme-moon div.jp-RenderedText > pre,
 body.rise-enabled.theme-moon div.jp-RenderedHTMLCommon,
 body.rise-enabled.theme-moon div.jp-MarkdownCell.jp-mod-rendered {
   color: #eee8d5;
+}
+
+/* Chalkboard Color Palette Customizations */
+/* Override default palette positioning - move to top center horizontally */
+body.rise-enabled div.palette {
+  position: absolute !important;
+  top: 10px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  font-size: 24px;
+  border-radius: 10px;
+  border: 4px solid #222;
+  background: rgba(0, 0, 0, 0.85) !important;
+  padding: 10px 20px;
+  transition: all 0.3s;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 15px;
+  z-index: 100;
+}
+
+/* Hint text styling */
+body.rise-enabled div.palette .palette-hint {
+  color: #fff;
+  font-size: 14px;
+  margin-right: 10px;
+  white-space: nowrap;
+  font-family: Arial, sans-serif;
+}
+
+body.rise-enabled div.palette .palette-hint kbd {
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+/* Horizontal color list */
+body.rise-enabled div.palette > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 8px;
+}
+
+body.rise-enabled div.palette > ul > li {
+  margin: 0 !important;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 4px;
+  border-radius: 5px;
+  border: 3px solid transparent;
+}
+
+/* Active color highlighting */
+body.rise-enabled div.palette > ul > li.active {
+  border-color: #ffd700 !important;
+  background: rgba(255, 215, 0, 0.2) !important;
+  transform: scale(1.2);
+}
+
+body.rise-enabled div.palette > ul > li:hover {
+  transform: scale(1.15);
+  opacity: 0.8;
+}
+
+/* Chalkboard cursor images - override plugin paths to use RISE bundled images */
+body.rise-enabled #notescanvas {
+  cursor: url(./img/boardmarker-black.png), auto !important;
+}
+
+body.rise-enabled #chalkboard {
+  cursor: url(./img/chalk-white.png), auto !important;
+}
+
+/* Override specific color cursors when they are set */
+body.rise-enabled [style*="boardmarker-black.png"] {
+  cursor: url(./img/boardmarker-black.png), auto !important;
+}
+
+body.rise-enabled [style*="boardmarker-blue.png"] {
+  cursor: url(./img/boardmarker-blue.png), auto !important;
+}
+
+body.rise-enabled [style*="boardmarker-red.png"] {
+  cursor: url(./img/boardmarker-red.png), auto !important;
+}
+
+body.rise-enabled [style*="boardmarker-green.png"] {
+  cursor: url(./img/boardmarker-green.png), auto !important;
+}
+
+body.rise-enabled [style*="boardmarker-orange.png"] {
+  cursor: url(./img/boardmarker-orange.png), auto !important;
+}
+
+body.rise-enabled [style*="boardmarker-purple.png"] {
+  cursor: url(./img/boardmarker-purple.png), auto !important;
+}
+
+body.rise-enabled [style*="boardmarker-yellow.png"] {
+  cursor: url(./img/boardmarker-yellow.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-white.png"] {
+  cursor: url(./img/chalk-white.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-blue.png"] {
+  cursor: url(./img/chalk-blue.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-red.png"] {
+  cursor: url(./img/chalk-red.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-green.png"] {
+  cursor: url(./img/chalk-green.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-orange.png"] {
+  cursor: url(./img/chalk-orange.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-purple.png"] {
+  cursor: url(./img/chalk-purple.png), auto !important;
+}
+
+body.rise-enabled [style*="chalk-yellow.png"] {
+  cursor: url(./img/chalk-yellow.png), auto !important;
+}
+
+body.rise-enabled [style*="sponge.png"] {
+  cursor: url(./img/sponge.png), auto !important;
 }
