@@ -1407,8 +1407,7 @@ namespace Rise {
             fullscreenHelp();
             break;
 
-          case 'l':
-          case 'l':
+          case '.':
             Reveal.togglePause();
             break;
 
