@@ -1211,6 +1211,7 @@ namespace Rise {
     const k = event.key;
     const isKey = 
       k === 'l' || k === 'L' ||
+      k === 'p' || k === 'P' ||
       k === 'h' || k === 'H' ||
       k === 'f' || k === 'F' ||
       k === 's' || k === 'S' ||
