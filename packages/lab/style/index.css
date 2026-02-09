@@ -1,1 +1,91 @@
+/** Index.css
+* Base styles shared across the extension.
+*
+*
+*Purpose:
+*  - Layout and interaction styles for the ThemePickerDialog
+*   - Displays available Reveal.js themes in a responsive grids. 
+*/
+
 @import url('base.css');
+
+
+.jp-Notebook, .jp-Cell, .rise-PreviewWidget {
+    background-color: transparent !important;
+}
+
+
+body.rise-enabled .jp-Notebook,
+body.rise-enabled .jp-Cell,
+body.rise-enabled .reveal-viewport,
+body.rise-enabled .reveal,
+body.rise-enabled .reveal .slides,
+body.rise-enabled .reveal .slides section {
+    background-color: transparent !important;
+}
+
+
+.rise-ThemePicker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 10px;
+}
+
+.rise-ThemePicker-item {
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: transform 0.2s;
+}
+
+.rise-ThemePicker-item:hover {
+    transform: scale(1.05);
+    border-color: var(--jp-brand-color1);
+}
+
+.rise-ThemePicker-item img {
+    width: 100%;
+    border-radius: 4px;
+}
+
+.jp-Notebook, .jp-Cell, .jp-OutputArea-output {
+    background-color: transparent !important;
+}
+
+
+.rise-PreviewWidget {
+    background-color: transparent !important;
+}
+
+
+body.rise-enabled {
+    --jp-layout-color0: transparent !important;
+    --jp-layout-color1: transparent !important;
+    --jp-layout-color2: transparent !important;
+    --jp-paper-color: transparent !important;
+    --jp-content-font-color1: inherit; /* Allow theme to control text color */
+}
+
+/*  Make all container layers transparent */
+body.rise-enabled #jp-main-content-panel,
+body.rise-enabled .jp-Notebook,
+body.rise-enabled .jp-Cell,
+body.rise-enabled .jp-InputArea-editor,
+body.rise-enabled .jp-Editor,
+body.rise-enabled .reveal-viewport,
+body.rise-enabled .reveal,
+body.rise-enabled .reveal .slides,
+body.rise-enabled .reveal .slides section {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/*  Clean up UI distractions for a professional look */
+body.rise-enabled .jp-Cell.jp-mod-selected {
+    border-left: none !important; /* Removes the blue active-cell bar */
+}
+
+iframe.rise-Preview-iframe {
+    background: transparent !important;
+}
