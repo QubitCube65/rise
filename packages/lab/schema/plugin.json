@@ -85,12 +85,12 @@
     },
     {
       "command": "RISE:chalkboard-toggleChalkboard",
-      "keys": ["["],
+      "keys": ["l"],
       "selector": ".lm-Widget.reveal .jp-mod-commandMode"
     },
     {
       "command": "RISE:chalkboard-toggleNotesCanvas",
-      "keys": ["]"],
+      "keys": ["p"],
       "selector": ".lm-Widget.reveal .jp-mod-commandMode"
     },
     {
