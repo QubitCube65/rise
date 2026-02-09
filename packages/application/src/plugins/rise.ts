@@ -422,8 +422,9 @@ namespace Rise {
       ...HARDWIRED_CONFIG,
       ...applicationSettings,
       ...((notebookModel?.getMetadata('livereveal') as any) ?? {}),
-      ...((notebookModel?.getMetadata('rise') as any) ?? {})
-    };
+      ...((notebookModel?.getMetadata('rise') as any) ?? {})};
+
+    
   }
 
   /* Register commands */
@@ -1504,6 +1505,55 @@ namespace Rise {
 
     // Sync when an output is generated.
     setupOutputObserver();
+
+ 
+  // Enable Themepicker again in Fullscreen mode
+
+function reapplyThemeOnFullscreen() {
+  // selcet theme based on the data in ThemePicker:
+  
+  const theme = document.body.getAttribute('data-rise-theme') || 'black';
+  
+  const colors: { [key: string]: string } = {
+    'black': '#191919',
+    'white': '#ffffff', 
+    'simple': '#ffffff',
+    'sky': '#f7fbfc',
+    'beige': '#f7f2d3',
+    'blood': '#222222',
+    'night': '#111111',
+    'moon': '#002b36',
+    'league': '#2b2b2b',
+    'dracula': '#282a36',
+    'solarized': '#fdf6e3',
+    'serif': '#f0f1eb'
+  };
+
+  const bgColor = colors[theme] || colors['black'];
+  
+  setTimeout(() => {
+    const fsEl = document.fullscreenElement || 
+                 (document as any).webkitFullscreenElement ||
+                 (document as any).mozFullScreenElement;
+    
+   if (fsEl) {
+      const element = fsEl as HTMLElement;
+      element.setAttribute('data-rise-theme', theme);
+      element.style.setProperty('background-color', bgColor, 'important');
+      
+      // look for the Reveal container
+      const reveal = element.querySelector('.reveal') as HTMLElement;
+      if (reveal) {
+        reveal.style.setProperty('background-color', bgColor, 'important');
+      }
+    }
+  }, 150);
+}
+
+
+// Event Listener 
+document.addEventListener('fullscreenchange', reapplyThemeOnFullscreen);
+document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
 
     // Setup the starting slide
     setStartingSlide(selected_slide);
