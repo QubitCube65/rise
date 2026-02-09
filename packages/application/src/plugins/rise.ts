@@ -989,6 +989,7 @@ namespace Rise {
 
   function openFontSizeMenu() {
     const content = document.createElement('div');
+      content.classList.add('rise-help-dialog-container');  // Class for Css changes in ThemePicker
       content.style.display = 'flex';
       content.style.flexDirection = 'column';
 
@@ -1618,6 +1619,7 @@ document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
     }
 
     const node = document.createElement('div');
+    node.className = 'rise-help-dialog-container'; // create new class for the changes in themePicker
     node.insertAdjacentHTML(
       'afterbegin',
       `<p>

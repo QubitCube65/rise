@@ -27,17 +27,45 @@
 
 }
 
-/* set jupyter lab transparent */
-body.rise-enabled #jp-main-content-panel,
-body.rise-enabled .jp-LabShell,
+/* 1. Alles transparent machen, um das Theme zu sehen */
+body.rise-enabled .lm-Widget,
 body.rise-enabled .jp-Notebook,
-body.rise-enabled .jp-Cell,
-body.rise-enabled .jp-NotebookPanel,
-body.rise-enabled .lm-Widget {
+body.rise-enabled .jp-Cell {
     background: transparent !important;
     background-color: transparent !important;
-    border: none !important;
 }
+
+/* 2. EXPLICIT OVERRIDE: Dialoge wieder weiß färben */
+/* Wir nutzen hier extrem spezifische Selektoren */
+.jp-Dialog .jp-Dialog-content,
+div.jp-Dialog-content.lm-Widget, 
+.font-size-dialog-container,
+.rise-help-dialog-container {
+    background: white !important;
+    background-color: white !important;
+    opacity: 1 !important;
+    color: #333 !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
+}
+
+
+
+
+/* Styling für Listen im Hilfe-Dialog */
+.rise-help-dialog-container ul {
+    list-style-type: disc !important;
+    padding-left: 25px !important;
+    color: #333 !important;
+}
+
+/* Font-Size Menu Fixes */
+.font-size-dialog-container div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    align-items: center;
+}
+
 
 /*Select themes their background-color */
 body[data-rise-theme='black'] { background-color: var(--rise-bg-black) !important; }
