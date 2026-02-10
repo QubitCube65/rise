@@ -39,8 +39,16 @@ export class ThemePickerDialog extends ReactWidget {
       //set theme attribut in main body
       document.body.setAttribute('data-rise-theme', themeName);
 
-      // inject main in document 
+      if (themeName !== 'dracula') {
       this._injectThemeCSS(document, themeName);
+  } else {
+      // Entferne altes Theme-CSS falls vorhanden
+      const link = document.getElementById('rise-reveal-theme-css');
+      if (link) link.remove();
+  }
+
+      // inject main in document 
+      //this._injectThemeCSS(document, themeName);
 
       // inject css in RISE-Iframe
       const iframe = document.querySelector('iframe.rise-Preview-iframe') as HTMLIFrameElement | null;
@@ -66,8 +74,8 @@ export class ThemePickerDialog extends ReactWidget {
       link.rel = 'stylesheet';
       doc.head.appendChild(link);
     }
-    // use the official CDN for the themes
-    link.href = `https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/${themeName}.min.css`;
+    // use the official CDN for the themes, update it to 4.5.0 for dracula theme
+    link.href = `https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/${themeName}.min.css`;
   }
 
   protected render(): JSX.Element {
@@ -92,7 +100,7 @@ export class ThemePickerDialog extends ReactWidget {
       { id: 'night', color: '#111', border: '#e7ad52', text: '#eee' },
       { id: 'moon', color: '#002b36', text: '#93a1a1' },
       { id: 'league', color: '#2b2b2b', border: '#333', text: '#eee' },
-      { id: 'dracula', color: '#282a36', border: '#bd93f9', text: '#f8f8f2' },
+      //{ id: 'dracula', color: '#282a36', border: '#bd93f9', text: '#f8f8f2' },
       { id: 'solarized', color: '#fdf6e3', text: '#586e75', border: '#dcd3b6' },
       { id: 'serif', color: '#f0f1eb', text: '#000', border: '#ddd' }
     ];

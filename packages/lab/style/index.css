@@ -7,7 +7,9 @@
 *   - Displays available Reveal.js themes in a responsive grids. 
 */
 
+
 /* define the color global based on the attributes of the body or fullscreen elements */
+
 :root {
 /* light themes */
     --rise-bg-white: #ffffff;
@@ -23,11 +25,11 @@
     --rise-bg-moon: #002b36;
     --rise-bg-blood: #222222;
     --rise-bg-league: #2b2b2b;
-    --rise-bg-dracula: #282a36;
+    --rise-bg-dracula: #282A36;
 
 }
 
-/* 1. Alles transparent machen, um das Theme zu sehen */
+/* set jupyter lab transparent for visibility of the theme background */
 body.rise-enabled .lm-Widget,
 body.rise-enabled .jp-Notebook,
 body.rise-enabled .jp-Cell {
@@ -35,8 +37,7 @@ body.rise-enabled .jp-Cell {
     background-color: transparent !important;
 }
 
-/* 2. EXPLICIT OVERRIDE: Dialoge wieder weiß färben */
-/* Wir nutzen hier extrem spezifische Selektoren */
+/* Set the help dialog when theme is active white*/
 .jp-Dialog .jp-Dialog-content,
 div.jp-Dialog-content.lm-Widget, 
 .font-size-dialog-container,
@@ -49,21 +50,39 @@ div.jp-Dialog-content.lm-Widget,
 }
 
 
-
-
-/* Styling für Listen im Hilfe-Dialog */
+/* Styling for lists in help-dialog */
 .rise-help-dialog-container ul {
     list-style-type: disc !important;
     padding-left: 25px !important;
     color: #333 !important;
 }
 
-/* Font-Size Menu Fixes */
+/* Set font size dialog white */
 .font-size-dialog-container div {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
     align-items: center;
+}
+
+/* Stops transparent side effect in righ-click menu*/
+.lm-Widget.lm-Menu,
+.lm-Widget.lm-Menu.lm-Widget {
+    background-color: #ffffff !important; /* white background  */
+    color: #333333 !important;           /* dark text */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* repair the Hover effect in menu */
+.lm-Menu-item.lm-mod-active {
+    background-color: #e0e0e0 !important;
+}
+
+/* color of of the Shortcut text in menu */
+.lm-Menu-itemShortcut {
+    color: #666666 !important;
 }
 
 
@@ -77,7 +96,7 @@ body[data-rise-theme='blood'] { background-color: var(--rise-bg-blood) !importan
 body[data-rise-theme='night'] { background-color: var(--rise-bg-night) !important; }
 body[data-rise-theme='moon'] { background-color: var(--rise-bg-moon) !important; }
 body[data-rise-theme='league'] { background-color: var(--rise-bg-league) !important; }
-body[data-rise-theme='dracula'] { background-color: var(--rise-bg-dracula) !important; }
+/*body[data-rise-theme='dracula'] { background-color: var(--rise-bg-dracula) !important; }*/
 body[data-rise-theme='solarized'] { background-color: var(--rise-bg-solarized) !important; }
 body[data-rise-theme='serif'] { background-color: var(--rise-bg-serif) !important; }
 
@@ -102,7 +121,7 @@ iframe.rise-Preview-iframe {
     background-color: inherit !important;
 }
 
-/* Theme Picker UI                                 */
+/* Theme Picker UI  */
 
 
 .rise-ThemePicker-grid {

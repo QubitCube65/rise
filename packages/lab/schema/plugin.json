@@ -195,7 +195,8 @@
         "simple",
         "solarized",
         "blood",
-        "moon"
+        "moon",
+        "dracula"
       ],
       "default": "simple"
     },
