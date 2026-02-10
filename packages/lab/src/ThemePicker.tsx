@@ -34,21 +34,15 @@ export class ThemePickerDialog extends ReactWidget {
       const model = current.model;
       const riseMetadata = (model.getMetadata('rise') as any) || {};
       const newMetadata = { ...riseMetadata, theme: themeName };
+     
+      // safe metadata in Notebook model
       model.setMetadata('rise', newMetadata);
       
-      //set theme attribut in main body
+      //set theme attribut for css styling
       document.body.setAttribute('data-rise-theme', themeName);
 
-      if (themeName !== 'dracula') {
+      // inject theme css in document 
       this._injectThemeCSS(document, themeName);
-  } else {
-      // Entferne altes Theme-CSS falls vorhanden
-      const link = document.getElementById('rise-reveal-theme-css');
-      if (link) link.remove();
-  }
-
-      // inject main in document 
-      //this._injectThemeCSS(document, themeName);
 
       // inject css in RISE-Iframe
       const iframe = document.querySelector('iframe.rise-Preview-iframe') as HTMLIFrameElement | null;

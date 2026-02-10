@@ -25,11 +25,11 @@
     --rise-bg-moon: #002b36;
     --rise-bg-blood: #222222;
     --rise-bg-league: #2b2b2b;
-    --rise-bg-dracula: #282A36;
+   /* --rise-bg-dracula: #282a36;*/
 
 }
 
-/* set jupyter lab transparent for visibility of the theme background */
+/* Set jupyter lab transparent for visibility of the theme background */
 body.rise-enabled .lm-Widget,
 body.rise-enabled .jp-Notebook,
 body.rise-enabled .jp-Cell {
@@ -139,3 +139,4 @@ iframe.rise-Preview-iframe {
 .rise-ThemePicker-item:hover {
   transform: scale(1.05);
 }
+

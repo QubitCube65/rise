@@ -1556,6 +1556,7 @@ function reapplyThemeOnFullscreen() {
 document.addEventListener('fullscreenchange', reapplyThemeOnFullscreen);
 document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
 
+
     // Setup the starting slide
     setStartingSlide(selected_slide);
     addHeaderFooterOverlay();
