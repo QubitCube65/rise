@@ -1001,13 +1001,9 @@ namespace Rise {
         79: null, // o disabled
         80: null, // p, up disabled
         84: null, // t, modified in the custom notes plugin.
-        86: null, // v, copy cell/blackscreen disabled
-        188: null, // comma, hard-wired to toggleAllRiseButtons (disabled, it's 'h' for help instead)
-        190: null, // scancode for blackscreen disabled, it's 'l' instead
-        191: null, // disabled for less confusion
-        219: null, // '' (and it blackened the screen without toggling)
-        220: null, // ''
-        221: null // ''
+        87: null, // w, toggle overview
+        // is it ok?
+        188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
       },
       plugins: []
     };
@@ -1070,84 +1066,78 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
-    //Keyboard shortcuts specific to RISE (add more shortcuts here manually):    
+    /* ! ! ! THE FOLLOWING KEYBOARD-EVENT CODE BLOCK BELONGS BENEATH THE IMPROVED CHALKBOARD ! ! !
+    Keyboard shortcuts specific to RISE (add more shortcuts here manually):  
+    */  
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-    if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
+      if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
 
-    const k = event.key;
-    const isKey = 
-      k === 'l' || k === 'L' ||
-      k === 'h' || k === 'H' ||
-      k === 'f' || k === 'F' ||
-      k === 's' || k === 'S' ||
-      k === 'q' || k === 'Q' ||
-      k === 'd' || k === 'D' ||
-      k === ' ' || k === ']' ||
-      k === '[' || k === 'H' ||
-      k === '=' || k === '-' ||
-      k === '?';
+      const k = event.key;
+      const isKey =
+        k === 'f' || k === 'F' ||
+        k === 'l' || k === 'L' ||
+        k === 'p' || k === 'P' ||  
+        k === 'd' || k === 'D' ||
+        k === 's' || k === 'S' ||
+        k === 'q' || k === 'Q' ||
+        k === '.' ||
+        k === '?' ||
+        k === '=' ||
+        k === '-';
+        
+      if (!isKey) return;
 
-    if (!isKey) return;
+      event.stopImmediatePropagation(); //prevents other event-listeners to be executed for the same elements
+      event.preventDefault(); //prevents defult action from browser
+      switch (k) {
 
-    event.stopImmediatePropagation();
-    event.preventDefault();
-    switch (event.key) {
-      case '?':
-        displayRiseHelp(commands, trans);
-        break;
+        case '?':
+          displayRiseHelp(commands, trans);
+          break;
 
-      case 'h':
-      case 'H':
-        toggleAllRiseButtons();
-        break;
+        case '.':
+          Reveal.togglePause();
+          break;
 
-      case 'f':
-      case 'F':
-        fullscreenHelp();
-        break;
+        case 'f': //open fullscreen
+        case 'F':
+          fullscreenHelp();
+          break;
 
-      case 'l':
-      case 'l':
-        Reveal.togglePause();
-        break;
+        case 'l': //open (not working) chalkboard
+        case 'L':
+          (window as any).RevealChalkboard?.toggleChalkboard();
+          break;
+
+        case 'p': //open working chalkboard
+        case 'P': 
+          (window as any).RevealChalkboard?.toggleNotesCanvas();
+          break;
+
+        case '=': //reset chalkboard data on current slide
+          (window as any).RevealChalkboard?.reset();
+          break;
+
+        case '-': //clear full size chalkboard
+          (window as any).RevealChalkboard?.clear();
+          break;
+
+        case 'd': //download chalkboard data
+        case 'D':
+          (window as any).RevealChalkboard?.download();
+          break;
       
-      case ' ':
-        event.shiftKey ? Reveal.prev() : Reveal.next();
-        break;
+        case 's': //next chalkboard color
+        case 'S':
+          (window as any).RevealChalkboard?.colorNext();
+          break;
 
-      case '[': //toggle full size chalkboard
-        (window as any).RevealChalkboard?.toggleChalkboard();
-        break;
-
-      case ']': //toggle notes chalkboard
-        (window as any).RevealChalkboard?.toggleNotesCanvas();
-        break;
-
-      case 's': //cycle to next pen color
-      case 'S':
-        (window as any).RevealChalkboard?.colorNext();
-        break;
-      
-      case 'q': //cycle to previous pen color
-      case 'Q':
-        (window as any).RevealChalkboard?.colorPrev();
-        break;
-
-      case '=': //reset chalkboard data on current slide
-        (window as any).RevealChalkboard?.reset();
-        break;
-
-      case '-': //clear full size chalkboard
-        (window as any).RevealChalkboard?.clear();
-        break;
-
-      case 'd':
-      case 'D':
-        (window as any).RevealChalkboard?.download();
-        break;
-    }
+        case 'q': //previous chalkboard color
+        case 'Q':
+          (window as any).RevealChalkboard?.colorPrev();
+         break;
+      }
     }, true);
-
 
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
@@ -1179,7 +1169,7 @@ namespace Rise {
 
     if (!complete_config.show_buttons_on_startup) {
       /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 10000);
+      setTimeout(toggleAllRiseButtons, 5000);  // Question mark disappears 5 seconds after opening slideshow
     }
 
     panel.content.activeCellChanged.connect((sender, cell) => {
@@ -1257,10 +1247,13 @@ namespace Rise {
     ${helpListItem(CommandIDs.riseLastSlide)}
     ${helpListItem(CommandIDs.riseToggleOverview)}
     ${helpListItem(CommandIDs.riseNotesOpen)}
-    <li><kbd>${CommandRegistry.formatKeystroke('H')}</kbd>: ${
+    <li><kbd>${CommandRegistry.formatKeystroke('F')}</kbd>: ${trans.__(
+      'open fullscreen'
+    )}</li>
+    <li><kbd>${CommandRegistry.formatKeystroke(',')}</kbd>: ${
       helpStrings[CommandIDs.riseToggleAllButtons]
     }</li>
-    <li><kbd>${CommandRegistry.formatKeystroke('L')}</kbd>: ${trans.__(
+    <li><kbd>${CommandRegistry.formatKeystroke('.')}</kbd>: ${trans.__(
       'black screen'
     )}</li>
     <li><strong>${trans.__('less useful')}:</strong></li>
@@ -1302,7 +1295,8 @@ namespace Rise {
     await showDialog({
       title: trans.__('Reveal Shortcuts Help'),
       body: new Widget({ node }),
-      buttons: [Dialog.warnButton({ label: trans.__('OK') })]
+      buttons: [Dialog.warnButton({ label: trans.__('OK') })],
+      host: document.querySelector('.reveal') as HTMLElement  //Dialog rendered in .reveal, so it's also visible on fullscreen
     });
   }
 
