@@ -1229,12 +1229,12 @@ namespace Rise {
               openFontSizeMenu();
             }
           },
-        191: (event: KeyboardEvent) => { // Shift+/ (= ?)
-            if (event.shiftKey) {
-              event.preventDefault();
-              displayRiseHelp(commands, trans);
-            }
-        }
+        //191: (event: KeyboardEvent) => { // Shift+/ (= ?)
+            //if (event.shiftKey) {
+              //event.preventDefault();
+              //displayRiseHelp(commands, trans);
+            //}
+        //}
         },
         plugins: []
     };
