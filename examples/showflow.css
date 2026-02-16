@@ -1,17 +1,20 @@
-/**
- * RISE Flow Visualization Example
+/*
+ * showflow.css
  *
  * Purpose:
- * - Simple flow visualization with red background
+ * Demonstration and debugging stylesheet used to verify that
+ * external CSS files are correctly loaded in RISE presentation
+ * mode.
  *
  * Usage:
- * 1. Place this file in: rise/examples/showflow.css
- * 2. Add 'flow' class to cells you want to highlight
+ * Apply the class `foo` to an element inside a slide. If this
+ * stylesheet is loaded successfully, the element will receive
+ * a red background while in RISE mode.
+ *
+*Note: The Styles apply only when RISE presentation mode is active.
+ *   The rule targets elements with class `.foo` inside Reveal.js slide sections.
  */
 
-/* Basic red background for flow elements */
-body.rise-enabled .flow {
-    background: red;
+body.rise-enabled .reveal section .foo {
+  background-color: red;
 }
-
-

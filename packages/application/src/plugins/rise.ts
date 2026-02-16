@@ -177,7 +177,7 @@ export const plugin: JupyterFrontEndPlugin<void> = {
   ) => {
     // Uncomment in dev mode to send logs to the parent window
     //Private.setupLog();
-
+    
     // Initialize style element with default values
     style.textContent = `
       :root {
@@ -190,20 +190,6 @@ export const plugin: JupyterFrontEndPlugin<void> = {
         --jp-ui-table-font-size-rise: 20px !important;
         --jp-ui-code-output: 20px !important;
       }
-
-     #help-b {
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 20px !important;
-    z-index: 9999 !important;
-    cursor: pointer !important;
-    color: #42affa !important;
-    opacity: 0.7 !important;
-  }
-
-  #help-b:hover {
-    opacity: 1 !important;
-  }
     `;
     document.head.appendChild(style);
 
@@ -436,8 +422,9 @@ namespace Rise {
       ...HARDWIRED_CONFIG,
       ...applicationSettings,
       ...((notebookModel?.getMetadata('livereveal') as any) ?? {}),
-      ...((notebookModel?.getMetadata('rise') as any) ?? {})
-    };
+      ...((notebookModel?.getMetadata('rise') as any) ?? {})};
+
+    
   }
 
   /* Register commands */
@@ -1002,6 +989,7 @@ namespace Rise {
 
   function openFontSizeMenu() {
     const content = document.createElement('div');
+      content.classList.add('rise-help-dialog-container');  // Class for Css changes in ThemePicker
       content.style.display = 'flex';
       content.style.flexDirection = 'column';
 
@@ -1089,9 +1077,9 @@ namespace Rise {
         contentWidget.dispose();
       });
   }
-//'#help-b', ...
+
   function toggleAllRiseButtons() {
-    for (const selector of ['#toggle-chalkboard', '#toggle-notes']) {
+    for (const selector of ['#help-b', '#toggle-chalkboard', '#toggle-notes']) {
       const element = document.querySelector(selector) as HTMLElement | null;
       if (element) {
         element.style.visibility =
@@ -1111,7 +1099,7 @@ namespace Rise {
   }
 
   let isRevealInitialized = false;
-//
+
   async function Revealer(
     panel: NotebookPanel,
     selected_slide: [number, number],
@@ -1236,21 +1224,16 @@ namespace Rise {
         80: null, // p, up disabled
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
+        // is it ok?
         188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
         67: (event: KeyboardEvent) => { // Shift+C for help menu
             if (event.shiftKey) {
               event.preventDefault();
               openFontSizeMenu();
             }
-          },
-        191: (event: KeyboardEvent) => { // Shift+/ (= ?)
-            if (event.shiftKey) {
-              event.preventDefault();
-              displayRiseHelp(commands, trans);
-            }
-        }
-        },
-        plugins: []
+          }
+      },
+      plugins: []
     };
 
     // Import notes plugin
@@ -1311,33 +1294,29 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
+    // ! ! ! THIS CODE BLOCK COMES BEFORE THE CUSTOM KEYS ! ! ! //
     // Customize chalkboard palettes after initialization
     function customizeChalkboardPalette() {
       // Find both palettes (notes canvas and chalkboard)
       const palettes = document.querySelectorAll('.palette');
 
       palettes.forEach((palette: Element) => {
-        // Check if hint text already added
-        if (palette.querySelector('.palette-hint')) {
-          return;
-        }
-
-        // Add hint text at the beginning
+        // add the hint text only once per palette
+        if (!palette.querySelector('.palette-hint')) {
         const hint = document.createElement('div');
         hint.classList.add('palette-hint');
         hint.innerHTML = 'Press <kbd>Q</kbd>/<kbd>S</kbd> to change color';
-
-        // Insert hint before the ul element
+        
+        // Insert hint before the list of colors
         const ul = palette.querySelector('ul');
-        if (ul) {
-          palette.insertBefore(hint, ul);
-        }
+        if (ul) palette.insertBefore(hint, ul);
+      }
 
-        // Mark first color as active
+      // ensure there is always exactly one active color
+      if (!palette.querySelector('li.active')) {
         const firstColorButton = palette.querySelector('li[data-color="0"]');
-        if (firstColorButton) {
-          firstColorButton.classList.add('active');
-        }
+        if (firstColorButton) firstColorButton.classList.add('active');
+      }
       });
     }
 
@@ -1354,83 +1333,68 @@ namespace Rise {
       });
     }
 
+    //Looks which color is active in the palette, gives 0 (first color) if none is active
+    function getActiveIndexFromPalette(): number {
+      const palette = document.querySelector('.palette');
+      const active = palette?.querySelector('li.active') as HTMLElement | null;
+      if (!active) return 0;
+      return parseInt(active.getAttribute('data-color') || '0', 10);
+    }
+
     // Override chalkboard color functions to update highlighting
     if (enable_chalkboard && (window as any).RevealChalkboard) {
       const chalkboard = (window as any).RevealChalkboard;
 
       // Store original functions
-      const originalColorIndex = chalkboard.colorIndex;
       const originalColorNext = chalkboard.colorNext;
       const originalColorPrev = chalkboard.colorPrev;
 
-      // Override colorIndex to update highlighting
-      chalkboard.colorIndex = function(idx?: number) {
-        if (originalColorIndex) {
-          originalColorIndex.call(this, idx);
-        }
+      //move to next color and update highlight
+      chalkboard.colorNext = function () {
+        // Get current color index BEFORE calling original function
+        const currentIndex = getActiveIndexFromPalette();
+        const palette = document.querySelector('.palette');
+        const buttons = palette?.querySelectorAll('li[data-color]');
+        const totalColors = buttons?.length || 1;
 
-        // Update highlighting after color change
+        // plugin changes color
+        originalColorNext?.call(this);
+
+        // Calculate new index based on OLD index (before color change)
+        const newIndex = (currentIndex + 1) % totalColors;
+
+        // Update UI highlighting after color change
         setTimeout(() => {
+          customizeChalkboardPalette(); // ensure hint + base state
+
           const palettes = document.querySelectorAll('.palette');
-          palettes.forEach((palette: Element) => {
-            // Get current color from chalkboard (this is a simplified approach)
-            updatePaletteHighlight(palette, idx || 0);
+          palettes.forEach((pal: Element) => {
+            updatePaletteHighlight(pal, newIndex);
           });
         }, 10);
       };
 
-      // Override colorNext
-      chalkboard.colorNext = function() {
-        // Get current color index before calling original function
-        let currentIndex = 0;
-        const firstPalette = document.querySelector('.palette');
-        if (firstPalette) {
-          const activeButton = firstPalette.querySelector('li.active');
-          if (activeButton) {
-            currentIndex = parseInt(activeButton.getAttribute('data-color') || '0');
-          }
-        }
+      //move to previous color and update highlight
+      chalkboard.colorPrev = function () {
+        // Get current color index BEFORE calling original function
+        const currentIndex = getActiveIndexFromPalette();
+        const palette = document.querySelector('.palette');
+        const buttons = palette?.querySelectorAll('li[data-color]');
+        const totalColors = buttons?.length || 1;
 
-        // Call original function to change the actual color
-        if (originalColorNext) {
-          originalColorNext.call(this);
-        }
+        // plugin changes color
+        originalColorPrev?.call(this);
 
-        // Calculate new index (current + 1, with wraparound)
+        // Calculate new index based on OLD index (before color change)
+        const newIndex = (currentIndex - 1 + totalColors) % totalColors;
+
+        // Update UI highlighting after color change
         setTimeout(() => {
+          customizeChalkboardPalette(); // ensure hint + base state
+
           const palettes = document.querySelectorAll('.palette');
-          palettes.forEach((palette: Element) => {
-            const colorButtons = palette.querySelectorAll('li[data-color]');
-            const newIndex = (currentIndex + 1) % colorButtons.length;
-            updatePaletteHighlight(palette, newIndex);
-          });
-        }, 10);
-      };
-
-      // Override colorPrev
-      chalkboard.colorPrev = function() {
-        // Get current color index before calling original function
-        let currentIndex = 0;
-        const firstPalette = document.querySelector('.palette');
-        if (firstPalette) {
-          const activeButton = firstPalette.querySelector('li.active');
-          if (activeButton) {
-            currentIndex = parseInt(activeButton.getAttribute('data-color') || '0');
-          }
-        }
-
-        // Call original function to change the actual color
-        if (originalColorPrev) {
-          originalColorPrev.call(this);
-        }
-
-        // Calculate new index (current - 1, with wraparound)
-        setTimeout(() => {
-          const palettes = document.querySelectorAll('.palette');
-          palettes.forEach((palette: Element) => {
-            const colorButtons = palette.querySelectorAll('li[data-color]');
-            const newIndex = currentIndex === 0 ? colorButtons.length - 1 : currentIndex - 1;
-            updatePaletteHighlight(palette, newIndex);
+          palettes.forEach((pal: Element) => {
+            updatePaletteHighlight(pal, newIndex);
           });
         }, 10);
       };
@@ -1440,7 +1404,7 @@ namespace Rise {
       Unselecter(panel.content);
       // check and set the scrolling slide when you start the whole thing
       setScrollingSlide();
-      autoSelectHook(panel.content);
+      autoSelectHook(panel.content); 
 
       // Customize chalkboard palette after reveal is ready
       if (enable_chalkboard) {
@@ -1449,6 +1413,89 @@ namespace Rise {
         setTimeout(customizeChalkboardPalette, 2000);
       }
     });
+    // ! ! ! THIS CODE BLOCK COMES BEFORE THE CUSTOM KEYS ! ! ! //
+
+
+    // ! ! ! THIS CODE BLOCK COMES AFTER THE CHALKBOARD ! ! ! //
+    //Keyboard shortcuts specific to RISE (add more shortcuts here manually):    
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+    if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
+
+    const k = event.key;
+    const isKey =               //only keys added in here can be used below
+      k === 'l' || k === 'L' ||
+      k === 'p' || k === 'P' ||
+      k === 'f' || k === 'F' ||
+      k === 'h' || k === 'H' ||
+      k === 'd' || k === 'D' ||
+      k === ' ' || k === '-' ||
+      k === '=' || k === '?';
+
+    if (!isKey) return;         
+
+    event.stopImmediatePropagation(); //prevents other event-listeners to be executed for the same elements
+    event.preventDefault(); //prevents defult action from browser
+    switch (event.key) {
+      case '?':
+        // Exit fullscreen in order to show help menu
+        if (document.fullscreenElement) {
+        document.exitFullscreen().then(() => {
+          displayRiseHelp(commands, trans);
+        });
+        } else {
+          displayRiseHelp(commands, trans);
+        }
+        break;
+
+      case 'h': //toggle help button
+      case 'H':
+        toggleAllRiseButtons();
+        break;
+
+      case 'f': //open fullscreen
+      case 'F':
+        fullscreenHelp();
+        break;
+
+      case '.': //blackscreen
+        Reveal.togglePause();
+        break;
+      
+      case ' ': //space: next slide, shift + space: previous slide
+        event.shiftKey ? Reveal.prev() : Reveal.next();
+        break;
+
+      case 'l': //open (not working) chalkboard
+      case 'L':
+        (window as any).RevealChalkboard?.toggleChalkboard();
+        setTimeout(customizeChalkboardPalette, 100); //This line only necessary for improved chalkboard (https://github.com/jupyterlab-contrib/rise/pull/132)
+        break;
+
+      case 'p': //open working chalkboard
+      case 'P': 
+        (window as any).RevealChalkboard?.toggleNotesCanvas();
+        setTimeout(customizeChalkboardPalette, 100); //This line only necessary for improved chalkboard (https://github.com/jupyterlab-contrib/rise/pull/132)
+        break;
+
+      case '=': //reset chalkboard data on current slide
+        (window as any).RevealChalkboard?.reset();
+        break;
+
+      case '-': //clear full size chalkboard
+        (window as any).RevealChalkboard?.clear();
+        break;
+
+      case 'd': //download chalkboard data
+      case 'D':
+        (window as any).RevealChalkboard?.download();
+        break;
+
+      //Q and S inputs not included so color picker doesn't jump to every second color
+
+    }
+    }, true);
+    // ! ! ! THIS CODE BLOCK COMES AFTER THE CHALKBOARD ! ! ! //
+
 
     Reveal.addEventListener('slidechanged', event => {
       Unselecter(panel.content);
@@ -1464,15 +1511,58 @@ namespace Rise {
       autoSelectHook(panel.content);
     });
 
-document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
-  if (event.shiftKey && event.key === '?') {
-    event.preventDefault();
-    displayRiseHelp(commands, trans);
-  }
-});
-
     // Sync when an output is generated.
     setupOutputObserver();
+
+ 
+  // Enable Themepicker again in Fullscreen mode
+
+function reapplyThemeOnFullscreen() {
+  // selcet theme based on the data in ThemePicker:
+  
+  const theme = document.body.getAttribute('data-rise-theme') || 'black';
+  
+  const colors: { [key: string]: string } = {
+    'black': '#191919',
+    'white': '#ffffff', 
+    'simple': '#ffffff',
+    'sky': '#f7fbfc',
+    'beige': '#f7f2d3',
+    'blood': '#222222',
+    'night': '#111111',
+    'moon': '#002b36',
+    'league': '#2b2b2b',
+    'dracula': '#282a36',
+    'solarized': '#fdf6e3',
+    'serif': '#f0f1eb'
+  };
+
+  const bgColor = colors[theme] || colors['black'];
+  
+  setTimeout(() => {
+    const fsEl = document.fullscreenElement || 
+                 (document as any).webkitFullscreenElement ||
+                 (document as any).mozFullScreenElement;
+    
+   if (fsEl) {
+      const element = fsEl as HTMLElement;
+      element.setAttribute('data-rise-theme', theme);
+      element.style.setProperty('background-color', bgColor, 'important');
+      
+      // look for the Reveal container
+      const reveal = element.querySelector('.reveal') as HTMLElement;
+      if (reveal) {
+        reveal.style.setProperty('background-color', bgColor, 'important');
+      }
+    }
+  }, 150);
+}
+
+
+// Event Listener 
+document.addEventListener('fullscreenchange', reapplyThemeOnFullscreen);
+document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
+
 
     // Setup the starting slide
     setStartingSlide(selected_slide);
@@ -1480,7 +1570,7 @@ document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
 
     if (!complete_config.show_buttons_on_startup) {
       /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 2000);
+      setTimeout(toggleAllRiseButtons, 5000);
     }
 
     panel.content.activeCellChanged.connect((sender, cell) => {
@@ -1537,6 +1627,7 @@ document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
     }
 
     const node = document.createElement('div');
+    node.className = 'rise-help-dialog-container'; // create new class for the changes in themePicker
     node.insertAdjacentHTML(
       'afterbegin',
       `<p>
@@ -1561,10 +1652,10 @@ document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
     ${helpListItem(CommandIDs.riseLastSlide)}
     ${helpListItem(CommandIDs.riseToggleOverview)}
     ${helpListItem(CommandIDs.riseNotesOpen)}
-    <li><kbd>${CommandRegistry.formatKeystroke(',')}</kbd>: ${
+    <li><kbd>${CommandRegistry.formatKeystroke('H/,')}</kbd>: ${
       helpStrings[CommandIDs.riseToggleAllButtons]
     }</li>
-    <li><kbd>${CommandRegistry.formatKeystroke('/')}</kbd>: ${trans.__(
+    <li><kbd>${CommandRegistry.formatKeystroke('.')}</kbd>: ${trans.__(
       'black screen'
     )}</li>
     <li><strong>${trans.__('less useful')}:</strong></li>
@@ -1606,8 +1697,7 @@ document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
     await showDialog({
       title: trans.__('Reveal Shortcuts Help'),
       body: new Widget({ node }),
-      buttons: [Dialog.warnButton({ label: trans.__('OK') })],
-      host: document.querySelector('.reveal') as HTMLElement //!!!
+      buttons: [Dialog.warnButton({ label: trans.__('OK') })]
     });
   }
 

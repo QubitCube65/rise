@@ -1,6 +1,6 @@
 {
   "name": "jupyterlab-rise",
-  "version": "0.43.1",
+  "version": "0.43.2",
   "description": "A JupyterLab extension to turn your Jupyter Notebooks into a live presentation.",
   "keywords": [
     "jupyter",
