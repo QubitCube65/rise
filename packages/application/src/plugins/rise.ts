@@ -1411,58 +1411,51 @@ namespace Rise {
 
     // ! ! ! THIS CODE BLOCK COMES AFTER THE CHALKBOARD ! ! ! //
     //Keyboard shortcuts specific to RISE (add more shortcuts here manually):    
+    /* ! ! ! THE FOLLOWING KEYBOARD-EVENT CODE BLOCK BELONGS BENEATH THE IMPROVED CHALKBOARD ! ! !
+    Keyboard shortcuts specific to RISE (add more shortcuts here manually):  
+    */  
     document.addEventListener('keydown', (event: KeyboardEvent) => {
-    if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
+      if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
 
-    const k = event.key;
-    const isKey =               //only keys added in here can be used below
-      k === 'l' || k === 'L' ||
-      k === 'p' || k === 'P' ||
-      k === 'f' || k === 'F' ||
-      k === 'h' || k === 'H' ||
-      k === 'd' || k === 'D' ||
-      k === ' ' || k === '-' ||
-      k === '=' || k === '?';
+      const k = event.key;
+      const isKey =
+        k === 'f' || k === 'F' ||
+        k === 'l' || k === 'L' ||
+        k === 'p' || k === 'P' ||  
+        k === 'd' || k === 'D' ||
+        k === 's' || k === 'S' ||
+        k === 'q' || k === 'Q' ||
+        k === '.' ||
+        k === '?' ||
+        k === '=' ||
+        k === '-';
+        
+      if (!isKey) return;
 
-    if (!isKey) return;         
+      event.stopImmediatePropagation(); //prevents other event-listeners to be executed for the same elements
+      event.preventDefault(); //prevents defult action from browser
+      switch (k) {
 
-    event.stopImmediatePropagation(); //prevents other event-listeners to be executed for the same elements
-    event.preventDefault(); //prevents defult action from browser
-    switch (event.key) {
-      case '?':
-        // Exit fullscreen in order to show help menu
-        if (document.fullscreenElement) {
-        document.exitFullscreen().then(() => {
+        case '?':
           displayRiseHelp(commands, trans);
-        });
-        } else {
-          displayRiseHelp(commands, trans);
-        }
-        break;
+          break;
 
-      case 'h': //toggle help button
-      case 'H':
-        toggleAllRiseButtons();
-        break;
+        case '.':
+          Reveal.togglePause();
+          break;
 
-      case 'f': //open fullscreen
-      case 'F':
-        fullscreenHelp();
-        break;
-
-      case '.': //blackscreen
-        Reveal.togglePause();
-        break;
-      
-      case ' ': //space: next slide, shift + space: previous slide
-        event.shiftKey ? Reveal.prev() : Reveal.next();
-        break;
+        case 'f': //open fullscreen
+        case 'F':
+          fullscreenHelp();
+          break;
 
       case 'l': //open (not working) chalkboard
       case 'L':
         (window as any).RevealChalkboard?.toggleChalkboard();
         setTimeout(customizeChalkboardPalette, 100); //This line only necessary for improved chalkboard (https://github.com/jupyterlab-contrib/rise/pull/132)
         break;
+      
+
 
       case 'p': //open working chalkboard
       case 'P': 
@@ -1474,21 +1467,33 @@ namespace Rise {
         (window as any).RevealChalkboard?.reset();
         break;
 
-      case '-': //clear full size chalkboard
-        (window as any).RevealChalkboard?.clear();
-        break;
+        case '-': //clear full size chalkboard
+          (window as any).RevealChalkboard?.clear();
+          break;
 
-      case 'd': //download chalkboard data
-      case 'D':
-        (window as any).RevealChalkboard?.download();
-        break;
+        case 'd': //download chalkboard data
+        case 'D':
+          (window as any).RevealChalkboard?.download();
+          break;
+      
+        case 's': //next chalkboard color
+        case 'S':
+          (window as any).RevealChalkboard?.colorNext();
+          break;
 
-      //Q and S inputs not included so color picker doesn't jump to every second color
-
-    }
+        case 'q': //previous chalkboard color
+        case 'Q':
+          (window as any).RevealChalkboard?.colorPrev();
+         break;
+      }
     }, true);
-    // ! ! ! THIS CODE BLOCK COMES AFTER THE CHALKBOARD ! ! ! //
 
+    Reveal.addEventListener('ready', event => {
+      Unselecter(panel.content);
+      // check and set the scrolling slide when you start the whole thing
+      setScrollingSlide();
+      autoSelectHook(panel.content);
+    });
 
     Reveal.addEventListener('slidechanged', event => {
       Unselecter(panel.content);
@@ -1563,7 +1568,7 @@ document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
 
     if (!complete_config.show_buttons_on_startup) {
       /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 5000);
+      setTimeout(toggleAllRiseButtons, 5000);  // Question mark disappears 5 seconds after opening slideshow
     }
 
     panel.content.activeCellChanged.connect((sender, cell) => {
@@ -1645,7 +1650,10 @@ document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
     ${helpListItem(CommandIDs.riseLastSlide)}
     ${helpListItem(CommandIDs.riseToggleOverview)}
     ${helpListItem(CommandIDs.riseNotesOpen)}
-    <li><kbd>${CommandRegistry.formatKeystroke('H/,')}</kbd>: ${
+    <li><kbd>${CommandRegistry.formatKeystroke('F')}</kbd>: ${trans.__(
+      'open fullscreen'
+    )}</li>
+    <li><kbd>${CommandRegistry.formatKeystroke(',')}</kbd>: ${
       helpStrings[CommandIDs.riseToggleAllButtons]
     }</li>
     <li><kbd>${CommandRegistry.formatKeystroke('.')}</kbd>: ${trans.__(
@@ -1690,7 +1698,8 @@ document.addEventListener('webkitfullscreenchange', reapplyThemeOnFullscreen);
     await showDialog({
       title: trans.__('Reveal Shortcuts Help'),
       body: new Widget({ node }),
-      buttons: [Dialog.warnButton({ label: trans.__('OK') })]
+      buttons: [Dialog.warnButton({ label: trans.__('OK') })],
+      host: document.querySelector('.reveal') as HTMLElement  //Dialog rendered in .reveal, so it's also visible on fullscreen
     });
   }
 
