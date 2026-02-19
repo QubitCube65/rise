@@ -1432,10 +1432,8 @@ namespace Rise {
       const isKey =
         k === 'f' || k === 'F' ||
         k === 'l' || k === 'L' ||
-        k === 'p' || k === 'P' ||  
+        k === 'p' || k === 'P' ||
         k === 'd' || k === 'D' ||
-        k === 's' || k === 'S' ||
-        k === 'q' || k === 'Q' ||
         k === '.' ||
         k === '?' ||
         k === '=' ||
@@ -1483,15 +1481,8 @@ namespace Rise {
           (window as any).RevealChalkboard?.download();
           break;
       
-        case 's': //next chalkboard color
-        case 'S':
-          (window as any).RevealChalkboard?.colorNext();
-          break;
-
-        case 'q': //previous chalkboard color
-        case 'Q':
-          (window as any).RevealChalkboard?.colorPrev();
-         break;
+        // Note: S/Q for color switching are handled by chalkboard plugin natively.
+        // We only override colorNext/Prev above to keep the UI highlight in sync.
       }
     }, true);
 
