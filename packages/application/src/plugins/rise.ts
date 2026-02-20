@@ -1097,7 +1097,7 @@ namespace Rise {
   }
 
   let isRevealInitialized = false;
-
+//
   async function Revealer(
     panel: NotebookPanel,
     selected_slide: [number, number],
@@ -1222,16 +1222,21 @@ namespace Rise {
         80: null, // p, up disabled
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
-        // is it ok?
         188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
         67: (event: KeyboardEvent) => { // Shift+C for help menu
             if (event.shiftKey) {
               event.preventDefault();
               openFontSizeMenu();
             }
-          }
-      },
-      plugins: []
+          },
+        //191: (event: KeyboardEvent) => { // Shift+/ (= ?)
+            //if (event.shiftKey) {
+              //event.preventDefault();
+              //displayRiseHelp(commands, trans);
+            //}
+        //}
+        },
+        plugins: []
     };
 
     // Import notes plugin
@@ -1292,7 +1297,6 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
-    // ! ! ! THIS CODE BLOCK COMES BEFORE THE CUSTOM KEYS ! ! ! //
     // Customize chalkboard palettes after initialization
     function customizeChalkboardPalette() {
       // Find both palettes (notes canvas and chalkboard)
@@ -1390,6 +1394,78 @@ namespace Rise {
         }, 10);
       };
     }
+    /* ! ! ! THE FOLLOWING KEYBOARD-EVENT CODE BLOCK BELONGS BENEATH THE IMPROVED CHALKBOARD ! ! !
+    Keyboard shortcuts specific to RISE (add more shortcuts here manually):  
+    */  
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (!document.body.classList.contains('rise-enabled')) return;    //if slides are not opened, do nothing
+
+      const k = event.key;
+      const isKey =
+        k === 'f' || k === 'F' ||
+        k === 'l' || k === 'L' ||
+        k === 'p' || k === 'P' ||  
+        k === 'd' || k === 'D' ||
+        k === 's' || k === 'S' ||
+        k === 'q' || k === 'Q' ||
+        k === '.' ||
+        k === '?' ||
+        k === '=' ||
+        k === '-';
+        
+      if (!isKey) return;
+
+      event.stopImmediatePropagation(); //prevents other event-listeners to be executed for the same elements
+      event.preventDefault(); //prevents defult action from browser
+      switch (k) {
+
+        case '?':
+          displayRiseHelp(commands, trans);
+          break;
+
+        case '.':
+          Reveal.togglePause();
+          break;
+
+        case 'f': //open fullscreen
+        case 'F':
+          fullscreenHelp();
+          break;
+
+        case 'l': //open (not working) chalkboard
+        case 'L':
+          (window as any).RevealChalkboard?.toggleChalkboard();
+          break;
+
+        case 'p': //open working chalkboard
+        case 'P': 
+          (window as any).RevealChalkboard?.toggleNotesCanvas();
+          break;
+
+        case '=': //reset chalkboard data on current slide
+          (window as any).RevealChalkboard?.reset();
+          break;
+
+        case '-': //clear full size chalkboard
+          (window as any).RevealChalkboard?.clear();
+          break;
+
+        case 'd': //download chalkboard data
+        case 'D':
+          (window as any).RevealChalkboard?.download();
+          break;
+      
+        case 's': //next chalkboard color
+        case 'S':
+          (window as any).RevealChalkboard?.colorNext();
+          break;
+
+        case 'q': //previous chalkboard color
+        case 'Q':
+          (window as any).RevealChalkboard?.colorPrev();
+         break;
+      }
+    }, true);
 
     Reveal.addEventListener('ready', event => {
       Unselecter(panel.content);
@@ -1502,6 +1578,13 @@ namespace Rise {
       autoSelectHook(panel.content);
     });
 
+document.addEventListener('keydown', (event: KeyboardEvent) => { //? button
+  if (event.shiftKey && event.key === '?') {
+    event.preventDefault();
+    displayRiseHelp(commands, trans);
+  }
+});
+
     // Sync when an output is generated.
     setupOutputObserver();
 
@@ -1511,7 +1594,7 @@ namespace Rise {
 
     if (!complete_config.show_buttons_on_startup) {
       /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 5000);
+      setTimeout(toggleAllRiseButtons, 5000);  // Question mark disappears 5 seconds after opening slideshow
     }
 
     panel.content.activeCellChanged.connect((sender, cell) => {
@@ -1592,7 +1675,10 @@ namespace Rise {
     ${helpListItem(CommandIDs.riseLastSlide)}
     ${helpListItem(CommandIDs.riseToggleOverview)}
     ${helpListItem(CommandIDs.riseNotesOpen)}
-    <li><kbd>${CommandRegistry.formatKeystroke('H/,')}</kbd>: ${
+    <li><kbd>${CommandRegistry.formatKeystroke('F')}</kbd>: ${trans.__(
+      'open fullscreen'
+    )}</li>
+    <li><kbd>${CommandRegistry.formatKeystroke(',')}</kbd>: ${
       helpStrings[CommandIDs.riseToggleAllButtons]
     }</li>
     <li><kbd>${CommandRegistry.formatKeystroke('.')}</kbd>: ${trans.__(
@@ -1637,7 +1723,8 @@ namespace Rise {
     await showDialog({
       title: trans.__('Reveal Shortcuts Help'),
       body: new Widget({ node }),
-      buttons: [Dialog.warnButton({ label: trans.__('OK') })]
+      buttons: [Dialog.warnButton({ label: trans.__('OK') })],
+      host: document.querySelector('.reveal') as HTMLElement  //Dialog rendered in .reveal, so it's also visible on fullscreen
     });
   }
 
