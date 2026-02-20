@@ -1,4 +1,3 @@
-
 /**
  * ThemePicker.tsx
  * -----------------
@@ -24,8 +23,7 @@ export class ThemePickerDialog extends ReactWidget {
     private notebookTracker: INotebookTracker 
   ) {
     super();
-
-    // CSS hook for styling the theme picker container
+       // CSS hook for styling the theme picker container
     this.addClass('rise-ThemePicker-container');
   }
 
@@ -36,31 +34,42 @@ export class ThemePickerDialog extends ReactWidget {
       const model = current.model;
       const riseMetadata = (model.getMetadata('rise') as any) || {};
       const newMetadata = { ...riseMetadata, theme: themeName };
+     
+      // safe metadata in Notebook model
       model.setMetadata('rise', newMetadata);
       
-      // Update user-facing status message
-      const statusEl = document.getElementById('rise-theme-status');
-      if (statusEl) {
-        statusEl.innerText = this.trans.__('Theme "%1" applied!', themeName.toUpperCase());
-        statusEl.style.color = 'var(--jp-success-color1)';
-      }
+      //set theme attribut for css styling
+      document.body.setAttribute('data-rise-theme', themeName);
 
-      void current.context.save();
-      this._refreshRisePreview();
+      // inject theme css in document 
+      this._injectThemeCSS(document, themeName);
+
+      // inject css in RISE-Iframe
+      const iframe = document.querySelector('iframe.rise-Preview-iframe') as HTMLIFrameElement | null;
+      if (iframe && iframe.contentDocument) {
+        const iframeDoc = iframe.contentDocument;
+        iframeDoc.body.setAttribute('data-rise-theme', themeName);
+        this._injectThemeCSS(iframeDoc, themeName);
+      }
       
-      // trigger a re-render so the active theme highlight updates
+      void current.context.save();
       this.update();
     }
   }
 
-  private _refreshRisePreview() {
-    const iframes = document.querySelectorAll('iframe');
-    iframes.forEach((iframe: HTMLIFrameElement) => {
-      if (iframe.src.includes('reveal')) {
-        const src = iframe.src;
-        iframe.src = src; 
-      }
-    });
+  /**
+   * inject Reveal.js CSS in a document or Iframe
+   */
+  private _injectThemeCSS(doc: Document, themeName: string) {
+    let link = doc.getElementById('rise-reveal-theme-css') as HTMLLinkElement;
+    if (!link) {
+      link = doc.createElement('link');
+      link.id = 'rise-reveal-theme-css';
+      link.rel = 'stylesheet';
+      doc.head.appendChild(link);
+    }
+    // use the official CDN for the themes, update it to 4.5.0 for dracula theme
+    link.href = `https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/${themeName}.min.css`;
   }
 
   protected render(): JSX.Element {
@@ -85,7 +94,7 @@ export class ThemePickerDialog extends ReactWidget {
       { id: 'night', color: '#111', border: '#e7ad52', text: '#eee' },
       { id: 'moon', color: '#002b36', text: '#93a1a1' },
       { id: 'league', color: '#2b2b2b', border: '#333', text: '#eee' },
-      { id: 'dracula', color: '#282a36', border: '#bd93f9', text: '#f8f8f2' },
+      //{ id: 'dracula', color: '#282a36', border: '#bd93f9', text: '#f8f8f2' },
       { id: 'solarized', color: '#fdf6e3', text: '#586e75', border: '#dcd3b6' },
       { id: 'serif', color: '#f0f1eb', text: '#000', border: '#ddd' }
     ];
@@ -135,7 +144,7 @@ export class ThemePickerDialog extends ReactWidget {
                   onMouseOut={(e) => {
                     if (!isActive) e.currentTarget.style.borderColor = theme.border || 'var(--jp-border-color2)';
                   }}
-                > /* Theme Label */
+                > /* Titel Text */
                   Aa
                 </div>
                 <div style={{ 

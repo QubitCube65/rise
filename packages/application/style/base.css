@@ -269,20 +269,12 @@ body.rise-enabled .jp-RenderedHTMLCommon h3 {
 body.rise-enabled .jp-RenderedHTMLCommon h4 {
   font-size: var(--jp-ui-font-size3-rise);
   font-weight: bold;
-<<<<<<< HEAD
-  font-style: italic;
-=======
->>>>>>> test-main-17-02
   /* font-style: italic; */
 }
 
 body.rise-enabled .jp-RenderedHTMLCommon h5 {
   font-size: var(--jp-ui-font-size4-rise);
   font-weight: bold;
-<<<<<<< HEAD
-  font-style: italic;
-=======
->>>>>>> test-main-17-02
   /* font-style: italic; */
 }
 
@@ -419,11 +411,7 @@ body.rise-enabled #toggle-notes {
   left: 7em !important;
 }
 
-<<<<<<< HEAD
-body.rise-enabled .jp-RenderedHTMLCommon table {
-=======
 .rise-enabled .jp-RenderedHTMLCommon table {
->>>>>>> test-main-17-02
   font-size: var(--jp-ui-table-font-size-rise);
 }
 

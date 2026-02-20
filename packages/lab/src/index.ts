@@ -401,7 +401,7 @@ execute: async () => {
   const current = notebookTracker.currentWidget;
   if (!current) return;
 
-  await showDialog({ // Das "const result =" wurde entfernt
+  await showDialog({ 
     title: trans.__('Choose a Slideshow Theme'),
     body: new ThemePickerDialog(trans, notebookTracker), 
     buttons: [Dialog.okButton({ label: trans.__('Close') })]
@@ -424,6 +424,9 @@ execute: async () => {
         // Don't trigger auto launch in stand-alone Rise application.
         if (app.name !== 'Rise') {
           await panel.context.ready;
+          const riseData = (panel.content.model?.getMetadata('rise') as any) || {};
+          const initialTheme = riseData.theme || 'black';
+        document.body.setAttribute('data-rise-theme', initialTheme);
 
           let autolaunch: boolean =
             (panel.content.model?.getMetadata('rise') ?? {})['autolaunch'] ??
