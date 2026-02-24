@@ -1066,6 +1066,52 @@ namespace Rise {
       isRevealInitialized = true;
     }
 
+    Reveal.addEventListener('ready', event => {
+      Unselecter(panel.content);
+      // check and set the scrolling slide when you start the whole thing
+      setScrollingSlide();
+      autoSelectHook(panel.content);
+    });
+
+    Reveal.addEventListener('slidechanged', event => {
+      Unselecter(panel.content);
+      // check and set the scrolling slide every time the slide change
+      setScrollingSlide();
+      autoSelectHook(panel.content);
+    });
+
+    Reveal.addEventListener('fragmentshown', event => {
+      autoSelectHook(panel.content);
+    });
+    Reveal.addEventListener('fragmenthidden', event => {
+      autoSelectHook(panel.content);
+    });
+
+    // Sync when an output is generated.
+    setupOutputObserver();
+
+    // Setup the starting slide
+    setStartingSlide(selected_slide);
+    addHeaderFooterOverlay();
+
+    if (!complete_config.show_buttons_on_startup) {
+      /* safer, and nicer too, to wait for reveal extensions to start */
+      setTimeout(toggleAllRiseButtons, 5000);  // Question mark disappears 5 seconds after opening slideshow
+    }
+
+    panel.content.activeCellChanged.connect((sender, cell) => {
+      // Move to active cell
+      if (!cell) {
+        return;
+      }
+      const slides = Reveal.getSlides();
+      const slide = slides.find(s => s.contains(cell.node));
+      if (slide) {
+        const i = Reveal.getIndices(slide as HTMLElement);
+        Reveal.slide(i.h, i.v, i.f);
+      }
+    });
+
     /* ! ! ! THE FOLLOWING KEYBOARD-EVENT CODE BLOCK BELONGS BENEATH THE IMPROVED CHALKBOARD ! ! !
     Keyboard shortcuts specific to RISE (add more shortcuts here manually):  
     */  
@@ -1138,52 +1184,6 @@ namespace Rise {
          break;
       }
     }, true);
-
-    Reveal.addEventListener('ready', event => {
-      Unselecter(panel.content);
-      // check and set the scrolling slide when you start the whole thing
-      setScrollingSlide();
-      autoSelectHook(panel.content);
-    });
-
-    Reveal.addEventListener('slidechanged', event => {
-      Unselecter(panel.content);
-      // check and set the scrolling slide every time the slide change
-      setScrollingSlide();
-      autoSelectHook(panel.content);
-    });
-
-    Reveal.addEventListener('fragmentshown', event => {
-      autoSelectHook(panel.content);
-    });
-    Reveal.addEventListener('fragmenthidden', event => {
-      autoSelectHook(panel.content);
-    });
-
-    // Sync when an output is generated.
-    setupOutputObserver();
-
-    // Setup the starting slide
-    setStartingSlide(selected_slide);
-    addHeaderFooterOverlay();
-
-    if (!complete_config.show_buttons_on_startup) {
-      /* safer, and nicer too, to wait for reveal extensions to start */
-      setTimeout(toggleAllRiseButtons, 5000);  // Question mark disappears 5 seconds after opening slideshow
-    }
-
-    panel.content.activeCellChanged.connect((sender, cell) => {
-      // Move to active cell
-      if (!cell) {
-        return;
-      }
-      const slides = Reveal.getSlides();
-      const slide = slides.find(s => s.contains(cell.node));
-      if (slide) {
-        const i = Reveal.getIndices(slide as HTMLElement);
-        Reveal.slide(i.h, i.v, i.f);
-      }
-    });
   }
 
   function Unselecter(notebook: Notebook) {
