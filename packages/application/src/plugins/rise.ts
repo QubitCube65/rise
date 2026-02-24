@@ -1003,7 +1003,7 @@ namespace Rise {
         84: null, // t, modified in the custom notes plugin.
         87: null, // w, toggle overview
         // is it ok?
-        188: toggleAllRiseButtons, // comma, hard-wired to toggleAllRiseButtons
+        188: toggleAllRiseButtons // comma, hard-wired to toggleAllRiseButtons
       },
       plugins: []
     };
@@ -1296,7 +1296,7 @@ namespace Rise {
       title: trans.__('Reveal Shortcuts Help'),
       body: new Widget({ node }),
       buttons: [Dialog.warnButton({ label: trans.__('OK') })],
-      host: document.querySelector('.reveal') as HTMLElement  //Dialog rendered in .reveal, so it's also visible on fullscreen
+      host: document.querySelector('.reveal') as HTMLElement //!!!
     });
   }
 
